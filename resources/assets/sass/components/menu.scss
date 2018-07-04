@@ -1,0 +1,28 @@
+.ctx-menu {
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16) !important;
+    user-select: none;
+    li {
+        a {
+            display: block;
+            width: 100%;
+            text-decoration: none;
+            color: #000;
+            padding: 8px 15px;
+            cursor: pointer;
+            &:hover, &:focus {
+                background: #0072d9;
+                color: #fff;
+            }
+            &.danger {
+                &:hover, &:focus {
+                    background: #ff4136;
+                    color: #fff;
+                }
+            }
+        }
+    }
+}

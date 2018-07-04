@@ -1,0 +1,373 @@
+.app-main {
+    flex: 1 1 auto;
+    height: 100%;
+    border: 1px solid #eee;
+    overflow: hidden;
+    position: relative;
+    .app-loader {
+        flex: 1 1 auto;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 99999999;
+        background: #fff;
+    }
+    .app-container {
+        display: flex;
+        flex-flow: row;
+        align-items: flex-start;
+        .app-page-form {
+            border-right: 1px solid #eee;
+            height: 609px !important;
+            pointer-events: none;
+            flex: 0;
+            width: 0;
+            opacity: 0;
+            padding-left: 0;
+            padding-right: 0;
+            transition: flex 300ms, width 300ms, opacity 300ms, padding-left 300ms, padding-right 300ms;
+            &.slide-show {
+                flex: 2;
+                padding: 1rem;
+                opacity: 1;
+                pointer-events: auto;
+            }
+            .page-textarea {
+                margin-top: 56px;
+                height: 576px !important;
+                max-height: 576px;
+                resize: none;
+                border: none;
+                box-shadow: none;
+            }
+        }
+        .app-categories {
+            flex: 1;
+            padding: 1rem;
+            border-left: 1px solid #eee;
+            transition: flex 300ms, width 300ms, opacity 300ms, padding-left 300ms, padding-right 300ms;
+            &.slide-hide {
+                pointer-events: none;
+                flex: 0;
+                width: 0;
+                opacity: 0;
+                padding-left: 0;
+                padding-right: 0;
+            }
+        }
+        .app-pages {
+            flex: 1;
+            padding: 1rem;
+            border-left: 1px solid #eee;
+            transition: flex 300ms, width 300ms, opacity 300ms, padding-left 300ms, padding-right 300ms;
+            &.slide-hide {
+                pointer-events: none;
+                flex: 0;
+                width: 0;
+                opacity: 0;
+                padding-left: 0;
+                padding-right: 0;
+            }
+        }
+        .app-page {
+            flex: 2;
+            padding: 1rem;
+            .app-page-container {
+                .app-page-head {
+                    display: flex;
+                    align-items: center;
+                    border-bottom: 1px solid #eee;
+                    margin-bottom: 15px;
+                    h1 {
+                        font-size: 30px;
+                        margin-bottom: 10px;
+                    }
+                    .app-edit-button {
+                        padding: 3px 0 5px 3px;
+                        height: auto;
+                        line-height: 0;
+                    }
+                    .app-settings-buttons {
+                        margin-left: auto;
+                        margin-bottom: 10px;
+                        .app-discard-button, .app-save-button {
+                            margin-left: 5px;
+                        }
+                    }
+                }
+                .app-page-contents {
+                    height: 576px !important;
+                    .app-page-contents-inner {
+                        margin-right: 14px;
+                    }
+                }
+            }
+        }
+        .app-section-head {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            .app-heading {
+                font-size: 10px;
+                margin: 0 5px 0 0;
+                text-transform: uppercase;
+            }
+            .app-filter-button {
+                padding: 2px 0;
+                margin: 0 5px 0 0;
+                height: auto;
+                line-height: 0;
+            }
+            .app-add-button {
+                padding: 2px 0;
+                margin: 0 5px 0 0;
+                height: auto;
+                line-height: 0;
+            }
+            .app-exit-button {
+                padding: 2px 0;
+                height: auto;
+                line-height: 0;
+            }
+        }
+        .category-form, .page-form {
+            .input-group {
+                margin-bottom: 12px;
+            }
+            .category-input {
+                border-radius: 0;
+            }
+            .page-input {
+                border-radius: 0.2em;
+                border-top-right-radius: 0;
+                border-bottom-right-radius: 0;
+            }
+            .button {
+                border-top-left-radius: 0;
+                border-bottom-left-radius: 0;
+                background: #0073d9;
+                color: #fff;
+                &:hover, &:focus {
+                    background: darken(#0073d9, 5%);
+                    color: #fff;
+                }
+            }
+        }
+        .app-cards {
+            height: 605px !important;
+            overflow-x: auto;
+            transition: height .3s;
+            &.less-height {
+                height: 558px !important;
+            }
+            .app-cards-container {
+                border: 1px solid #eee;
+                .app-card {
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    padding: 10px;
+                    border-bottom: 1px solid #eee;
+                    user-select: none;
+                    transition: all .1s;
+                    cursor: pointer;
+                    &:hover, &:active, &.selected {
+                        background: #0072d9;
+                        color: #fff;
+                    }
+                    &:last-child {
+                        border-bottom: none;
+                    }
+                    & > h3 {
+                        font-size: 16px;
+                        margin: 0;
+                        flex-grow: 1;
+                    }
+                    & > div {
+        
+                    }
+                    .app-card-drag {
+                        cursor: move;
+                        cursor: grab;
+                        cursor: -moz-grab;
+                        cursor: -webkit-grab;
+                        padding: 0 10px;
+                    }
+                    .app-card-drag:active { 
+                        cursor: grabbing;
+                        cursor: -moz-grabbing;
+                        cursor: -webkit-grabbing;
+                    }
+                    .app-card-circle {
+                        height: 20px;
+                        width: 20px;
+                        background: #eee;
+                        border-radius: 50%;
+                        margin-right: 10px;
+                        box-shadow: 0 1px 3px -1px black;
+                    }
+                }
+            }
+        }
+    }
+    .app-auth {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        .app-auth-bg {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: -1;
+            display: flex;
+            .obj-1 {
+                width: 350px;
+                margin-right: auto;
+                margin-left: 20px;
+                margin-bottom: auto;
+                margin-top: -10px;
+            }
+            .obj-2 {
+                width: 180px;
+                margin-left: auto;
+                margin-right: 40px;
+                margin-top: 40px;
+            }
+        }
+        .app-auth-heading {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        .app-auth-container {
+            display: flex;
+            align-items: center;
+            margin: auto;
+            padding: 20px;
+            max-width: 1100px;
+            background: rgba(255, 255, 255, 0.7);
+            box-shadow: inset 0 0px 1px rgba(0, 0, 0, 0.9);
+            .app-auth-intro {
+                width: 65%;
+                padding-right: 20px;
+                border-right: 1px solid #eee;
+                .sub-text {
+                    text-align: center;
+                    margin-bottom: 40px;
+                    font-size: 16px;
+                    line-height: 0;
+                    color: #8a8a8a;
+                }
+                .intro-boxes {
+                    display: flex;
+                    .intro-box {
+                        padding: 10px;
+                        margin: 5px;
+                        background: #fff;
+                        box-shadow: inset 0 0px 1px rgba(0, 0, 0, 0.25);
+                        max-width: 218px;
+                        .intro-icon {
+                            text-align: center;
+                            img {
+                                height: 50px;
+                                width: 161px;
+                                margin: 10px 0;
+                            }
+                        }
+                        .intro-text {
+                            text-align: center;
+                        }
+                    }
+                }
+            }
+            .app-auth-form {
+                width: 35%;
+                padding-left: 20px;
+                h2 {
+                    text-align: center;
+                    margin-bottom: 20px;
+                    font-size: 22px;
+                }
+                .button {
+                    margin-bottom: 1.5rem;
+                }
+                .form-links {
+                    p {
+                        margin: 0;
+                    }
+                }
+            }
+        }
+    }
+    .app-profile {
+        display: flex;
+        align-items: flex-start;
+        .app-profile-data {
+            padding: 15px;
+            margin-top: 30px;
+            background: #ecf6ff;
+            border-radius: 0.2em;
+            box-shadow: 0 2px 5px #a4d4ff;
+            max-width: 25%;
+            h1 {
+                font-size: 25px;
+                margin-bottom: 15px;
+            }
+            .avatar-wrapper {
+                width: 321px;
+                height: 321px;
+                margin-bottom: 15px;
+                img {
+                    width: 321px;
+                    height: 321px;
+                }
+            }
+            p {
+                margin-bottom: 10px;
+            }
+            p:last-child {
+                margin-bottom: 0;
+            }
+        }
+        .app-edit-forms {
+            display: flex;
+            padding: 15px;
+            margin-top: 30px;
+            border-radius: 0.2em;
+            width: 75%;
+            & > div {
+                width: 100%;
+                padding: 15px;
+                padding-top: 5px;
+                border-right: 1px solid #eee;
+                &:last-child {
+                    border-right: none;
+                }
+            }
+            h2 {
+                font-size: 20px;
+                margin-bottom: 15px;
+            }
+            .delete-account-button {
+                margin-bottom: 15px;
+            }
+        }
+    }
+    .app-card-404 {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        .app-card-404-inner {
+            text-align: center;
+            .app-card-404-icon {
+                width: 200px;
+                margin-left: 102px;
+            }
+        }
+    }
+}
