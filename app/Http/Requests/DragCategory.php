@@ -24,7 +24,8 @@ class DragCategory extends FormRequest
     public function rules()
     {
         return [
-            //
+            'categories' => 'required|array',
+            'categories.*' => 'required|integer|distinct|min:1',
         ];
     }
 }

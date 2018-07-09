@@ -26,16 +26,20 @@
                 <error v-if="error"></error>
                 <div v-else-if="loading" class="loader-bg h100"></div>
                 <div class="app-cards-container" v-else-if="categories.length > 0">
-                    <draggable v-model="categories" :options="{animation: 300}">
+                    <draggable
+                        v-model="categories"
+                        :options="{ group: 'categories', animation: 100, handle: '.drag-handle' }"
+                        @change="handelCategoriesChange"
+                    >
                         <transition-group name="list" tag="div">
                             <card
                                 v-for="category in categories"
                                 :key="category.id"
                                 :card-title="category.self"
                                 :color="category.color"
-                                @click.native="handleSelectCard(category)"
-                                @click.right.native="handleSelectCard(category)"
+                                :category="category"
                                 v-bind:class="[selectedCardId == category.id ? selectedCardClass : '']"
+                                @click.right.native="handleSelectCard(category)"
                                 @contextmenu.prevent.native="$refs.categoryMenu.open"
                             />
                         </transition-group>
@@ -193,6 +197,12 @@
                         self.$store.dispatch('deleteCategory', this.selectedCardId);
                     });
                 }
+            },
+            handelCategoriesChange () {
+                this.$store.dispatch('syncCategories', {
+                    categories: this.categories,
+                    sort: this.$store.state.sort.categories
+                });
             }
         }
     }

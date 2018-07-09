@@ -64,7 +64,6 @@ const store = new Vuex.Store({
             return 'Bearer ' + state.apiToken;
         },
         sortedCategories(state) {
-            // return _.orderBy(state.categories, 'order', state.sort.categories);
             return state.categories;
         }
     },
@@ -117,7 +116,7 @@ const store = new Vuex.Store({
             state.error.pages = visibility;
         },
         setCategories (state, categories) {
-            state.categories = categories;
+            state.categories = _.orderBy(categories, 'order', state.sort.categories);
         },
         setPages (state, pages) {
             state.pages = pages;
@@ -296,8 +295,19 @@ const store = new Vuex.Store({
             commit('deleteCategory', id);
         },
         orderCategories ({commit}, categories) {
-            console.log(categories);
             commit('orderCategories', categories);
+        },
+        syncCategories (context, payload) {
+            var orderedCategories = [];
+            payload.categories.map((category) => {
+                orderedCategories.push(category.id);
+            });
+            if (payload.sort == 'asc') {
+                orderedCategories.reverse();
+            }
+            axios.patch(route('category.drag'), {
+                categories: orderedCategories
+            });
         }
         // async syncCategories (context) {
         //     context.commit('categoryError', false);

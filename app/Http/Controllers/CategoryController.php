@@ -25,22 +25,12 @@ class CategoryController extends Controller
 
     public function drag(DragCategory $request)
     {
-        $categories = Category::whereUserId(Auth::id())->ordered()->get();
-        foreach ($categories as $category) {
-            $category->timestamps = false;
-            $id = $category->id;
-            foreach ($request->categories as $categoryFrontEnd) {
-                if ($categoryFrontEnd['id'] == $id) {
-                    $category->update(['order' => $categoryFrontEnd['order']]);
-                }
-            }
-        }
+        $categoriesId = $request->categories;
+        $categories = Category::setNewOrder($categoriesId);
 
-        // filter the array to only return the id field
-        // $categoryFrontEnd;
-        // $categories = Category::setNewOrder([3,1,2]);
-
-        return new CategoryCollection($categories);
+        return response()->json([
+            'message' => 'Categories have ordered successfully.'
+        ], 200);
     }
 
     /**

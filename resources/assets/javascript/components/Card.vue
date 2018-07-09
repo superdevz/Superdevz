@@ -1,11 +1,18 @@
 <template>
     <div class="app-card">
-        <div class="app-card-drag" v-tooltip.left="dragMsg">
+        <div class="app-card-drag drag-handle" title="Drag to order">
             <i class="fas fa-ellipsis-v"></i>
         </div>
-        <h3 class="app-card-heading">{{ cardTitle }}</h3>
-        <div v-if="color">
-            <color-circle :color="color"></color-circle>
+        <div class="app-card-wrapper">
+            <h3
+                class="app-card-heading"
+                @click="handleSelectCard()"
+            >
+                {{ cardTitle }}
+            </h3>
+            <div class="app-card-circle-warpper" v-if="color" @click="handleSelectCard()">
+                <color-circle :color="color"></color-circle>
+            </div>
         </div>
     </div>
 </template>
@@ -14,9 +21,14 @@
     export default {
         data() {
             return {
-                dragMsg: 'Drag to order'
+
             }
         },
-        props: ['cardTitle', 'color'],
+        props: [ 'cardTitle', 'color', 'category' ],
+        methods: {
+            handleSelectCard () {
+                this.$store.dispatch('setSelectedCard', this.category);
+            }
+        }
     }
 </script>

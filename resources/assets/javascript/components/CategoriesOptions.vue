@@ -1,6 +1,16 @@
 <template>
     <div class="app-section-head">
         <h2 class="app-heading">Categories</h2>
+        <v-popover offset="16">
+            <button type="button" class="app-info-button button" v-tooltip.top-center="infoMsg">
+                <span class="fa-layers fa-fw">
+                    <i class="fas fa-info"></i>
+                </span>
+            </button>
+            <template slot="popover">
+                <p class="popover-text">{{ helpText }}</p>
+            </template>
+        </v-popover>
         <button type="button" class="app-filter-button button" @click="handleSortChange" v-tooltip.top-center="sortMsg">
             <span class="fa-layers fa-fw">
                 <span :class="transparentAsc">
@@ -31,7 +41,9 @@
                 activeClass: 'active',
                 sortMsg: 'Sort categories',
                 createMsg: 'Create a category',
-                exitMsg: 'Exit edit mode'
+                exitMsg: 'Exit edit mode',
+                infoMsg: 'Pro tip',
+                helpText: 'You can order categories by dragging and dropping the three dots at the left of any category.'
             }
         },
         methods: {

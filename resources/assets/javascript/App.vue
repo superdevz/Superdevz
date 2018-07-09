@@ -19,7 +19,7 @@
             </div>
         </header>
 
-        <main class="app-main container">
+        <main class="app-main container" style="width: 400px;">
             <transition name="page-loader">
                 <div v-if="loading" class="app-loader">
                     <div class="loader-bg loader-bg-xl h100"></div>

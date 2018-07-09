@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Vuebar from 'vuebar';
-import VTooltip from 'v-tooltip';
+import VTooltip, { VPopover } from 'v-tooltip';
 import VueRouter from 'vue-router';
 import App from './App.vue';
 import axios from 'axios';
@@ -28,6 +28,8 @@ Vue.component('error', require('./components/Error.vue'));
 Vue.component('card', require('./components/Card.vue'));
 Vue.component('color-circle', require('./components/ColorCircle.vue'));
 Vue.component('empty', require('./components/Empty.vue'));
+Vue.component('v-popover', VPopover);
+
 // Vue.component('app-pages', require('./components/AppPages.vue'));
 // Vue.component('app-page', require('./components/AppPage.vue'));
 // Vue.component('page-form', require('./components/PageForm.vue'));

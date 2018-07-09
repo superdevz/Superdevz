@@ -287,6 +287,9 @@ html, body {
     transform: scale(0.8) translateY(30px);
     opacity: 0;
 }
+.disabled-enter-active, .disabled-leave-to {
+    transition: none !important;
+}
 .fixed-alerts {
     position: fixed;
     z-index: 99999999999;

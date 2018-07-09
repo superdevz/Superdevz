@@ -4088,6 +4088,12 @@ button.button-lg {
   opacity: 0;
 }
 
+.disabled-enter-active,
+.disabled-leave-to {
+  -webkit-transition: none !important;
+  transition: none !important;
+}
+
 .fixed-alerts {
   position: fixed;
   z-index: 99999999999;
@@ -4245,6 +4251,26 @@ button.button-lg {
   top: calc(50% - 5px);
   margin-left: 0;
   margin-right: 0;
+}
+
+.tooltip.popover .popover-inner {
+  background: #ecf6ff;
+  color: black;
+  padding: 10px;
+  border-radius: 0.2em;
+  -webkit-box-shadow: 0 2px 5px #a4d4ff;
+          box-shadow: 0 2px 5px #a4d4ff;
+  max-width: 200px;
+}
+
+.tooltip.popover .popover-arrow {
+  border-color: #ecf6ff;
+}
+
+.tooltip.popover .popover-text {
+  font-size: 12px;
+  margin: 0;
+  text-align: center;
 }
 
 .tooltip[aria-hidden='true'] {
@@ -4548,6 +4574,17 @@ button.button-lg {
   text-transform: uppercase;
 }
 
+.app-main .app-container .app-section-head .app-info-button {
+  padding: 2px 0;
+  margin: 0 5px 0 0;
+  height: auto;
+  line-height: 0;
+}
+
+.app-main .app-container .app-section-head .app-info-button .fa-info {
+  font-size: 12px;
+}
+
 .app-main .app-container .app-section-head .app-filter-button {
   padding: 2px 0;
   margin: 0 5px 0 0;
@@ -4627,7 +4664,6 @@ button.button-lg {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
-  padding: 10px;
   border-bottom: 1px solid #eee;
   -webkit-user-select: none;
      -moz-user-select: none;
@@ -4636,10 +4672,9 @@ button.button-lg {
   -webkit-transition: all .1s;
   transition: all .1s;
   cursor: pointer;
+  height: 40px;
 }
 
-.app-main .app-container .app-cards .app-cards-container .app-card:hover,
-.app-main .app-container .app-cards .app-cards-container .app-card:active,
 .app-main .app-container .app-cards .app-cards-container .app-card.selected {
   background: #0072d9;
   color: #fff;
@@ -4649,19 +4684,12 @@ button.button-lg {
   border-bottom: none;
 }
 
-.app-main .app-container .app-cards .app-cards-container .app-card > h3 {
-  font-size: 16px;
-  margin: 0;
-  -webkit-box-flex: 1;
-      -ms-flex-positive: 1;
-          flex-grow: 1;
-}
-
 .app-main .app-container .app-cards .app-cards-container .app-card .app-card-drag {
   cursor: move;
   cursor: grab;
   cursor: -webkit-grab;
-  padding: 0 10px;
+  padding: 12px;
+  font-size: 11px;
 }
 
 .app-main .app-container .app-cards .app-cards-container .app-card .app-card-drag:active {
@@ -4669,14 +4697,55 @@ button.button-lg {
   cursor: -webkit-grabbing;
 }
 
-.app-main .app-container .app-cards .app-cards-container .app-card .app-card-circle {
-  height: 20px;
-  width: 20px;
+.app-main .app-container .app-cards .app-cards-container .app-card .app-card-wrapper {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.app-main .app-container .app-cards .app-cards-container .app-card .app-card-wrapper > h3 {
+  font-size: 16px;
+  margin: 0;
+  -webkit-box-flex: 1;
+      -ms-flex-positive: 1;
+          flex-grow: 1;
+  padding: 11px;
+  height: 100%;
+}
+
+.app-main .app-container .app-cards .app-cards-container .app-card .app-card-wrapper > h3:hover,
+.app-main .app-container .app-cards .app-cards-container .app-card .app-card-wrapper > h3:active {
+  background: #0072d9;
+  color: #fff;
+}
+
+.app-main .app-container .app-cards .app-cards-container .app-card .app-card-wrapper .app-card-circle-warpper {
+  height: 100%;
+}
+
+.app-main .app-container .app-cards .app-cards-container .app-card .app-card-wrapper .app-card-circle-warpper .app-card-circle {
+  height: 16px;
+  width: 16px;
   background: #eee;
   border-radius: 50%;
-  margin-right: 10px;
+  margin: 12px;
   -webkit-box-shadow: 0 1px 3px -1px black;
           box-shadow: 0 1px 3px -1px black;
+}
+
+.app-main .app-container .app-cards .app-cards-container .app-card .app-card-wrapper .app-card-circle-warpper .app-card-circle:hover,
+.app-main .app-container .app-cards .app-cards-container .app-card .app-card-wrapper .app-card-circle-warpper .app-card-circle:active {
+  background: #0072d9;
+  color: #fff;
 }
 
 .app-main .app-auth {
