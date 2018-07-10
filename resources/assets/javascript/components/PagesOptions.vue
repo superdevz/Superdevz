@@ -1,6 +1,6 @@
 <template>
     <div class="app-section-head">
-        <h2 class="app-heading">Categories</h2>
+        <h2 class="app-heading">Pages</h2>
         <v-popover offset="16">
             <button type="button" class="app-info-button button" v-tooltip.top-center="infoMsg">
                 <span class="fa-layers fa-fw">
@@ -12,7 +12,6 @@
                     <ul class="clean-list">
                         <li>{{ helpText }}</li>
                         <li>{{ helpText2 }}</li>
-                        <li>{{ helpText3 }}</li>
                     </ul>
                 </p>
             </template>
@@ -45,39 +44,38 @@
         data() {
             return {
                 activeClass: 'active',
-                sortMsg: 'Sort categories',
-                createMsg: 'Create a category',
+                sortMsg: 'Sort pages',
+                createMsg: 'Create a page',
                 exitMsg: 'Exit edit mode',
                 infoMsg: 'Pro tips',
-                helpText: 'You can order categories by dragging and dropping the three dots at the left of any category.',
-                helpText2: 'You can right-click any category to edit or delete it.',
-                helpText3: 'You can right-click any category to add a new page.'
+                helpText: 'You can order pages by dragging and dropping the three dots at the left of any page.',
+                helpText2: 'You can right-click any page to edit or delete it.'
             }
         },
         methods: {
             handleSortChange () {
-                let sort = this.$store.state.sort.categories == 'desc' ? 'asc' : 'desc';
-                this.$store.dispatch('setCategoriesSort', sort);
+                let sort = this.$store.state.sort.pages == 'desc' ? 'asc' : 'desc';
+                this.$store.dispatch('setPagesSort', sort);
             },
             handelShowAddForm () {
-                this.$store.dispatch('setCategoriesAddFormVisibility', !this.addFormVisiblity);
+                this.$store.dispatch('setPagesAddFormVisibility', !this.addFormVisiblity);
             },
             handelHideEditForm () {
-                this.$store.dispatch('setCategoriesEditFormVisibility', false);
+                this.$store.dispatch('setPagesEditFormVisibility', false);
             }
         },
         computed: {
             addFormVisiblity() {
-                return this.$store.state.formVisiblity.categories.add;
+                return this.$store.state.formVisiblity.pages.add;
             },
             editFormVisiblity() {
-                return this.$store.state.formVisiblity.categories.edit;
+                return this.$store.state.formVisiblity.pages.edit;
             },
             transparentAsc: function() {
-                return this.$store.state.sort.categories == 'asc' ? '' : 'opa05';
+                return this.$store.state.sort.pages == 'asc' ? '' : 'opa05';
             },
             transparentDesc: function() {
-                return this.$store.state.sort.categories == 'desc' ? '' : 'opa05';
+                return this.$store.state.sort.pages == 'desc' ? '' : 'opa05';
             },
         }
     }

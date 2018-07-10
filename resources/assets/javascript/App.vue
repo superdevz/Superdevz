@@ -19,7 +19,7 @@
             </div>
         </header>
 
-        <main class="app-main container" style="width: 400px;">
+        <main class="app-main container">
             <transition name="page-loader">
                 <div v-if="loading" class="app-loader">
                     <div class="loader-bg loader-bg-xl h100"></div>
@@ -32,7 +32,7 @@
             <div class="container">
                 <div class="app-footer-inner">
                     <p><small>&copy; Codolog - Developers reminder</small></p>
-                    <p><small>Made with <i class="fas fa-heart heart"></i> - Icons made by <a href="https://www.flaticon.com/" title="Flaticon">Flaticon</a> and licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></small></p>
+                    <p><small>Made with <i class="fas fa-heart heart"></i> by <a href="https://abdalla.js.org" target="_blank">Abdalla Arbab</a> from OTSI .inc <span v-if="currentRoute == 'auth'">- Icons made by <a href="https://www.flaticon.com/" title="Flaticon" target="_blank">Flaticon</a> and licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></span></small></p>
                 </div>
             </div>
         </footer>
@@ -71,6 +71,9 @@
             },
             alerts () {
                 return this.$store.state.alerts;
+            },
+            currentRoute() {
+                return this.$route.name;
             }
         },
     }

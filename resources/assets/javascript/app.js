@@ -29,8 +29,9 @@ Vue.component('card', require('./components/Card.vue'));
 Vue.component('color-circle', require('./components/ColorCircle.vue'));
 Vue.component('empty', require('./components/Empty.vue'));
 Vue.component('v-popover', VPopover);
-
-// Vue.component('app-pages', require('./components/AppPages.vue'));
+Vue.component('app-pages', require('./components/AppPages.vue'));
+Vue.component('pages-options', require('./components/pagesOptions.vue'));
+Vue.component('empty-pages', require('./components/EmptyPages.vue'));
 // Vue.component('app-page', require('./components/AppPage.vue'));
 // Vue.component('page-form', require('./components/PageForm.vue'));
 // Vue.component('pages-head', require('./components/PagesHead.vue'));

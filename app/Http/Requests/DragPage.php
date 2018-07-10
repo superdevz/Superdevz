@@ -24,7 +24,8 @@ class DragPage extends FormRequest
     public function rules()
     {
         return [
-            //
+            'pages' => 'required|array',
+            'pages.*' => 'required|integer|distinct|min:1',
         ];
     }
 }

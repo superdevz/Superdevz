@@ -29,7 +29,7 @@
                     <draggable
                         v-model="categories"
                         :options="{ group: 'categories', animation: 100, handle: '.drag-handle' }"
-                        @change="handelCategoriesChange"
+                        @change="handelCategoriesSorting"
                     >
                         <transition-group name="list" tag="div">
                             <card
@@ -37,7 +37,8 @@
                                 :key="category.id"
                                 :card-title="category.self"
                                 :color="category.color"
-                                :category="category"
+                                :single="category"
+                                cardType="category"
                                 v-bind:class="[selectedCardId == category.id ? selectedCardClass : '']"
                                 @click.right.native="handleSelectCard(category)"
                                 @contextmenu.prevent.native="$refs.categoryMenu.open"
@@ -49,6 +50,7 @@
             </div>
         </div>
         <context-menu id="context-menu" ref="categoryMenu">
+            <li><a href="#" class="normal" @click.prevent="handleAddPage">Add page</a></li>
             <li><a href="#" class="normal" @click.prevent="handleActiveEditMode">Edit</a></li>
             <li><a href="#" class="danger" @click.prevent="handleRemoveCategory">Delete</a></li>
         </context-menu>
@@ -141,7 +143,10 @@
                         self.add.buttonLoading = false;
                         self.add.name = '';
                         self.add.color = '';
-                        self.$store.dispatch('addCategory', data.data.data);
+                        self.$store.dispatch('addCategory', {
+                            category: data.data.data,
+                            sort: this.$store.state.sort.categories
+                        });
                     })
                     .catch(error => {
                         self.add.buttonLoading = false;
@@ -179,7 +184,7 @@
                 }
             },
             handleSelectCard (category) {
-                this.$store.dispatch('setSelectedCard', category);
+                this.$store.dispatch('setSelectedCategory', category);
             },
             handleActiveEditMode () {
                 this.edit.name = this.selectedCardName;
@@ -198,11 +203,14 @@
                     });
                 }
             },
-            handelCategoriesChange () {
+            handelCategoriesSorting () {
                 this.$store.dispatch('syncCategories', {
                     categories: this.categories,
                     sort: this.$store.state.sort.categories
                 });
+            },
+            handleAddPage () {
+                this.$store.dispatch('setPageAddMode', true);
             }
         }
     }

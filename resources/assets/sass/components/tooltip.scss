@@ -108,7 +108,7 @@
 		.popover-text {
 			font-size: 12px;
 			margin: 0;
-			text-align: center;
+			// text-align: center;
 		}
 	}
 
@@ -122,5 +122,10 @@
 		visibility: visible;
 		opacity: 1;
 		transition: opacity .15s;
+	}
+}
+.v-popover {
+	.trigger {
+		outline: none;
 	}
 }

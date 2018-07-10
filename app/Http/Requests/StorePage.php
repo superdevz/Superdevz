@@ -24,8 +24,7 @@ class StorePage extends FormRequest
     public function rules()
     {
         return [
-            'title' => 'required|max:255',
-            'markdown' => ''
+            'title' => 'required|max:255'
         ];
     }
 }

@@ -39,10 +39,10 @@ const store = new Vuex.Store({
                 add: false,
                 edit: false
             },
-            // pages: {
-            //     add: false,
-            //     edit: false
-            // }
+            pages: {
+                add: false,
+                edit: false
+            }
         },
         selectedCard: {
             categories: {
@@ -52,12 +52,15 @@ const store = new Vuex.Store({
                     color: ''
                 }
             },
-            // pages: {
-            //     id: undefined
-            // }
+            pages: {
+                id: undefined,
+                data: {
+                    title: ''
+                }
+            },
         },
         categories: [],
-//         pages: [],
+        pages: [],
     },
     getters: {
         apiToken(state) {
@@ -65,6 +68,21 @@ const store = new Vuex.Store({
         },
         sortedCategories(state) {
             return state.categories;
+        },
+        sortedPages(state) {
+            if (state.selectedCard.categories.id == undefined) {
+                return [];
+            } else {
+                let pages = state.pages;
+                return pages.filter(page => page.category_id == state.selectedCard.categories.id);
+            }
+        },
+        hasPages(state) {
+            let filteredPages = state.pages.filter(page => page.category_id == state.selectedCard.categories.id);
+            if(filteredPages.length == 0 && state.selectedCard.categories.id != undefined) {
+                return false;
+            }
+            return true;
         }
     },
     mutations: {
@@ -79,9 +97,7 @@ const store = new Vuex.Store({
         },
         setCategoriesSort(state, sort) {
             state.sort.categories = sort;
-        },
-        setPagesSort(state, sort) {
-            state.sort.pages = sort;
+            state.categories = state.categories.reverse();
         },
         addFlash (state, flash) {
             state.alertCount++;
@@ -127,7 +143,7 @@ const store = new Vuex.Store({
         setCategoriesEditFormVisibility (state, visibility) {
             state.formVisiblity.categories.edit = visibility;
         },
-        setSelectedCard (state, category) {
+        setSelectedCategory (state, category) {
             state.selectedCard.categories.id = category.id;
             state.selectedCard.categories.data.name = category.self;
             state.selectedCard.categories.data.color = category.color;
@@ -136,8 +152,16 @@ const store = new Vuex.Store({
             state.formVisiblity.categories.edit = mode;
             state.formVisiblity.categories.add = false;
         },
-        addCategory(state, category) {
+        addCategoryAsc(state, category) {
             state.categories.push({
+                id: category.id,
+                order: category.order,
+                self: category.self,
+                color: category.color
+            });
+        },
+        addCategoryDesc(state, category) {
+            state.categories.unshift({
                 id: category.id,
                 order: category.order,
                 self: category.self,
@@ -158,7 +182,54 @@ const store = new Vuex.Store({
         },
         orderCategories (state, categories) {
             state.categories = categories;
-        }
+        },
+        setPagesSort(state, sort) {
+            state.sort.pages = sort;
+        },
+        setPagesAddFormVisibility (state, visibility) {
+            state.formVisiblity.pages.add = visibility;
+        },
+        setPagesEditFormVisibility (state, visibility) {
+            state.formVisiblity.pages.edit = visibility;
+        },
+        addPageAsc(state, page) {
+            state.pages.push({
+                id: page.id,
+                category_id: page.category_id,
+                order: page.order,
+                title: page.title,
+                markdown: page.self
+            });
+        },
+        addPageDesc(state, page) {
+            state.pages.unshift({
+                id: page.id,
+                category_id: page.category_id,
+                order: page.order,
+                title: page.title,
+                markdown: page.self
+            });
+        },
+        setPageEditMode (state, mode) {
+            state.formVisiblity.pages.edit = mode;
+            state.formVisiblity.pages.add = false;
+        },
+        editPage(state, payload) {
+            let position = state.pages.findIndex((element) => {
+                return element.id == payload.id;
+            });
+            state.pages.splice(position, 1, payload.page);
+        },
+        orderPages (state, pages) {
+            state.pages = pages;
+        },
+        setSelectedPage (state, page) {
+            state.selectedCard.pages.id = page.id;
+            state.selectedCard.pages.data.title = page.title;
+        },
+        setPageAddMode (state, mode) {
+            state.formVisiblity.pages.add = mode;
+        },
     },
     actions: {
         pageLoading ({commit}, visibility) {
@@ -172,9 +243,6 @@ const store = new Vuex.Store({
         },
         setCategoriesSort({commit}, sort) {
             commit('setCategoriesSort', sort);
-        },
-        setPagesSort({commit}, sort) {
-            commit('setPagesSort', sort);
         },
         setProfile (context, profile) {
             context.commit('setProfile', profile);
@@ -279,14 +347,18 @@ const store = new Vuex.Store({
         setCategoriesEditFormVisibility ({commit}, visibility) {
             commit('setCategoriesEditFormVisibility', visibility);
         },
-        setSelectedCard ({commit}, payload) {
-            commit('setSelectedCard', payload);
+        setSelectedCategory ({commit}, category) {
+            commit('setSelectedCategory', category);
         },
         setCategoryEditMode ({commit}, mode) {
             commit('setCategoryEditMode', mode);
         },
-        addCategory({commit}, category) {
-            commit('addCategory', category);
+        addCategory({commit}, payload) {
+            if (payload.sort == 'desc') {
+                commit('addCategoryDesc', payload.category);
+            } else {
+                commit('addCategoryAsc', payload.category);
+            }
         },
         editCategory({commit}, payload) {
             commit('editCategory', payload);
@@ -302,12 +374,62 @@ const store = new Vuex.Store({
             payload.categories.map((category) => {
                 orderedCategories.push(category.id);
             });
-            if (payload.sort == 'asc') {
+            if (payload.sort == 'desc') {
                 orderedCategories.reverse();
             }
             axios.patch(route('category.drag'), {
                 categories: orderedCategories
             });
+        },
+        setPagesSort({commit}, sort) {
+            commit('setPagesSort', sort);
+        },
+        setPagesAddFormVisibility ({commit}, visibility) {
+            commit('setPagesAddFormVisibility', visibility);
+        },
+        setPagesEditFormVisibility ({commit}, visibility) {
+            commit('setPagesEditFormVisibility', visibility);
+        },
+        addPage({commit}, payload) {
+            if (payload.sort == 'desc') {
+                commit('addPageDesc', payload.page);
+            } else {
+                commit('addPageAsc', payload.page);
+            }
+        },
+        setPageEditMode ({commit}, mode) {
+            commit('setPageEditMode', mode);
+        },
+        editPage({commit}, payload) {
+            commit('editPage', payload);
+        },
+        syncPages (context, payload) {
+            var orderedPages = [];
+            payload.pages.map((page) => {
+                orderedPages.push(page.id);
+            });
+            if (payload.sort == 'desc') {
+                orderedPages.reverse();
+            }
+            axios.patch(route('page.drag'), {
+                pages: orderedPages
+            });
+        },
+        orderPages ({commit}, pages) {
+            commit('orderPages', pages);
+        },
+        setSelectedPage ({commit}, page) {
+            commit('setSelectedPage', page);
+        },
+        setSelectedCard ({commit}, payload) {
+            if(payload.cardType == 'category') {
+                commit('setSelectedCategory', payload.single);
+            } else {
+                commit('setSelectedPage', payload.single);
+            }
+        },
+        setPageAddMode ({commit}, mode) {
+            commit('setPageAddMode', mode);
         }
         // async syncCategories (context) {
         //     context.commit('categoryError', false);

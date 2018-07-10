@@ -14520,11 +14520,11 @@ var store = new __WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */].Store({
             categories: {
                 add: false,
                 edit: false
+            },
+            pages: {
+                add: false,
+                edit: false
             }
-            // pages: {
-            //     add: false,
-            //     edit: false
-            // }
         },
         selectedCard: {
             categories: {
@@ -14533,13 +14533,16 @@ var store = new __WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */].Store({
                     name: '',
                     color: ''
                 }
+            },
+            pages: {
+                id: undefined,
+                data: {
+                    title: ''
+                }
             }
-            // pages: {
-            //     id: undefined
-            // }
         },
-        categories: []
-        //         pages: [],
+        categories: [],
+        pages: []
     },
     getters: {
         apiToken: function apiToken(state) {
@@ -14547,6 +14550,25 @@ var store = new __WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */].Store({
         },
         sortedCategories: function sortedCategories(state) {
             return state.categories;
+        },
+        sortedPages: function sortedPages(state) {
+            if (state.selectedCard.categories.id == undefined) {
+                return [];
+            } else {
+                var pages = state.pages;
+                return pages.filter(function (page) {
+                    return page.category_id == state.selectedCard.categories.id;
+                });
+            }
+        },
+        hasPages: function hasPages(state) {
+            var filteredPages = state.pages.filter(function (page) {
+                return page.category_id == state.selectedCard.categories.id;
+            });
+            if (filteredPages.length == 0 && state.selectedCard.categories.id != undefined) {
+                return false;
+            }
+            return true;
         }
     },
     mutations: {
@@ -14561,9 +14583,7 @@ var store = new __WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */].Store({
         },
         setCategoriesSort: function setCategoriesSort(state, sort) {
             state.sort.categories = sort;
-        },
-        setPagesSort: function setPagesSort(state, sort) {
-            state.sort.pages = sort;
+            state.categories = state.categories.reverse();
         },
         addFlash: function addFlash(state, flash) {
             state.alertCount++;
@@ -14611,7 +14631,7 @@ var store = new __WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */].Store({
         setCategoriesEditFormVisibility: function setCategoriesEditFormVisibility(state, visibility) {
             state.formVisiblity.categories.edit = visibility;
         },
-        setSelectedCard: function setSelectedCard(state, category) {
+        setSelectedCategory: function setSelectedCategory(state, category) {
             state.selectedCard.categories.id = category.id;
             state.selectedCard.categories.data.name = category.self;
             state.selectedCard.categories.data.color = category.color;
@@ -14620,8 +14640,16 @@ var store = new __WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */].Store({
             state.formVisiblity.categories.edit = mode;
             state.formVisiblity.categories.add = false;
         },
-        addCategory: function addCategory(state, category) {
+        addCategoryAsc: function addCategoryAsc(state, category) {
             state.categories.push({
+                id: category.id,
+                order: category.order,
+                self: category.self,
+                color: category.color
+            });
+        },
+        addCategoryDesc: function addCategoryDesc(state, category) {
+            state.categories.unshift({
                 id: category.id,
                 order: category.order,
                 self: category.self,
@@ -14642,6 +14670,53 @@ var store = new __WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */].Store({
         },
         orderCategories: function orderCategories(state, categories) {
             state.categories = categories;
+        },
+        setPagesSort: function setPagesSort(state, sort) {
+            state.sort.pages = sort;
+        },
+        setPagesAddFormVisibility: function setPagesAddFormVisibility(state, visibility) {
+            state.formVisiblity.pages.add = visibility;
+        },
+        setPagesEditFormVisibility: function setPagesEditFormVisibility(state, visibility) {
+            state.formVisiblity.pages.edit = visibility;
+        },
+        addPageAsc: function addPageAsc(state, page) {
+            state.pages.push({
+                id: page.id,
+                category_id: page.category_id,
+                order: page.order,
+                title: page.title,
+                markdown: page.self
+            });
+        },
+        addPageDesc: function addPageDesc(state, page) {
+            state.pages.unshift({
+                id: page.id,
+                category_id: page.category_id,
+                order: page.order,
+                title: page.title,
+                markdown: page.self
+            });
+        },
+        setPageEditMode: function setPageEditMode(state, mode) {
+            state.formVisiblity.pages.edit = mode;
+            state.formVisiblity.pages.add = false;
+        },
+        editPage: function editPage(state, payload) {
+            var position = state.pages.findIndex(function (element) {
+                return element.id == payload.id;
+            });
+            state.pages.splice(position, 1, payload.page);
+        },
+        orderPages: function orderPages(state, pages) {
+            state.pages = pages;
+        },
+        setSelectedPage: function setSelectedPage(state, page) {
+            state.selectedCard.pages.id = page.id;
+            state.selectedCard.pages.data.title = page.title;
+        },
+        setPageAddMode: function setPageAddMode(state, mode) {
+            state.formVisiblity.pages.add = mode;
         }
     },
     actions: {
@@ -14664,11 +14739,6 @@ var store = new __WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */].Store({
             var commit = _ref4.commit;
 
             commit('setCategoriesSort', sort);
-        },
-        setPagesSort: function setPagesSort(_ref5, sort) {
-            var commit = _ref5.commit;
-
-            commit('setPagesSort', sort);
         },
         setProfile: function setProfile(context, profile) {
             context.commit('setProfile', profile);
@@ -14759,43 +14829,47 @@ var store = new __WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */].Store({
             context.dispatch('fetchCategories');
             context.dispatch('fetchPages');
         },
-        setCategoriesAddFormVisibility: function setCategoriesAddFormVisibility(_ref6, visibility) {
-            var commit = _ref6.commit;
+        setCategoriesAddFormVisibility: function setCategoriesAddFormVisibility(_ref5, visibility) {
+            var commit = _ref5.commit;
 
             commit('setCategoriesAddFormVisibility', visibility);
         },
-        setCategoriesEditFormVisibility: function setCategoriesEditFormVisibility(_ref7, visibility) {
-            var commit = _ref7.commit;
+        setCategoriesEditFormVisibility: function setCategoriesEditFormVisibility(_ref6, visibility) {
+            var commit = _ref6.commit;
 
             commit('setCategoriesEditFormVisibility', visibility);
         },
-        setSelectedCard: function setSelectedCard(_ref8, payload) {
-            var commit = _ref8.commit;
+        setSelectedCategory: function setSelectedCategory(_ref7, category) {
+            var commit = _ref7.commit;
 
-            commit('setSelectedCard', payload);
+            commit('setSelectedCategory', category);
         },
-        setCategoryEditMode: function setCategoryEditMode(_ref9, mode) {
-            var commit = _ref9.commit;
+        setCategoryEditMode: function setCategoryEditMode(_ref8, mode) {
+            var commit = _ref8.commit;
 
             commit('setCategoryEditMode', mode);
         },
-        addCategory: function addCategory(_ref10, category) {
-            var commit = _ref10.commit;
+        addCategory: function addCategory(_ref9, payload) {
+            var commit = _ref9.commit;
 
-            commit('addCategory', category);
+            if (payload.sort == 'desc') {
+                commit('addCategoryDesc', payload.category);
+            } else {
+                commit('addCategoryAsc', payload.category);
+            }
         },
-        editCategory: function editCategory(_ref11, payload) {
-            var commit = _ref11.commit;
+        editCategory: function editCategory(_ref10, payload) {
+            var commit = _ref10.commit;
 
             commit('editCategory', payload);
         },
-        deleteCategory: function deleteCategory(_ref12, id) {
-            var commit = _ref12.commit;
+        deleteCategory: function deleteCategory(_ref11, id) {
+            var commit = _ref11.commit;
 
             commit('deleteCategory', id);
         },
-        orderCategories: function orderCategories(_ref13, categories) {
-            var commit = _ref13.commit;
+        orderCategories: function orderCategories(_ref12, categories) {
+            var commit = _ref12.commit;
 
             commit('orderCategories', categories);
         },
@@ -14804,12 +14878,82 @@ var store = new __WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */].Store({
             payload.categories.map(function (category) {
                 orderedCategories.push(category.id);
             });
-            if (payload.sort == 'asc') {
+            if (payload.sort == 'desc') {
                 orderedCategories.reverse();
             }
             __WEBPACK_IMPORTED_MODULE_4_axios___default.a.patch(route('category.drag'), {
                 categories: orderedCategories
             });
+        },
+        setPagesSort: function setPagesSort(_ref13, sort) {
+            var commit = _ref13.commit;
+
+            commit('setPagesSort', sort);
+        },
+        setPagesAddFormVisibility: function setPagesAddFormVisibility(_ref14, visibility) {
+            var commit = _ref14.commit;
+
+            commit('setPagesAddFormVisibility', visibility);
+        },
+        setPagesEditFormVisibility: function setPagesEditFormVisibility(_ref15, visibility) {
+            var commit = _ref15.commit;
+
+            commit('setPagesEditFormVisibility', visibility);
+        },
+        addPage: function addPage(_ref16, payload) {
+            var commit = _ref16.commit;
+
+            if (payload.sort == 'desc') {
+                commit('addPageDesc', payload.page);
+            } else {
+                commit('addPageAsc', payload.page);
+            }
+        },
+        setPageEditMode: function setPageEditMode(_ref17, mode) {
+            var commit = _ref17.commit;
+
+            commit('setPageEditMode', mode);
+        },
+        editPage: function editPage(_ref18, payload) {
+            var commit = _ref18.commit;
+
+            commit('editPage', payload);
+        },
+        syncPages: function syncPages(context, payload) {
+            var orderedPages = [];
+            payload.pages.map(function (page) {
+                orderedPages.push(page.id);
+            });
+            if (payload.sort == 'desc') {
+                orderedPages.reverse();
+            }
+            __WEBPACK_IMPORTED_MODULE_4_axios___default.a.patch(route('page.drag'), {
+                pages: orderedPages
+            });
+        },
+        orderPages: function orderPages(_ref19, pages) {
+            var commit = _ref19.commit;
+
+            commit('orderPages', pages);
+        },
+        setSelectedPage: function setSelectedPage(_ref20, page) {
+            var commit = _ref20.commit;
+
+            commit('setSelectedPage', page);
+        },
+        setSelectedCard: function setSelectedCard(_ref21, payload) {
+            var commit = _ref21.commit;
+
+            if (payload.cardType == 'category') {
+                commit('setSelectedCategory', payload.single);
+            } else {
+                commit('setSelectedPage', payload.single);
+            }
+        },
+        setPageAddMode: function setPageAddMode(_ref22, mode) {
+            var commit = _ref22.commit;
+
+            commit('setPageAddMode', mode);
         }
         // async syncCategories (context) {
         //     context.commit('categoryError', false);
@@ -15218,8 +15362,9 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('card', __webpack_require_
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('color-circle', __webpack_require__(86));
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('empty', __webpack_require__(89));
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('v-popover', __WEBPACK_IMPORTED_MODULE_2_v_tooltip__["a" /* VPopover */]);
-
-// Vue.component('app-pages', require('./components/AppPages.vue'));
+__WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('app-pages', __webpack_require__(110));
+__WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('pages-options', __webpack_require__(113));
+__WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('empty-pages', __webpack_require__(116));
 // Vue.component('app-page', require('./components/AppPage.vue'));
 // Vue.component('page-form', require('./components/PageForm.vue'));
 // Vue.component('pages-head', require('./components/PagesHead.vue'));
@@ -22995,6 +23140,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
         alerts: function alerts() {
             return this.$store.state.alerts;
+        },
+        currentRoute: function currentRoute() {
+            return this.$route.name;
         }
     }
 });
@@ -43685,7 +43833,12 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "app-container" }, [_c("app-categories")], 1)
+  return _c(
+    "div",
+    { staticClass: "app-container" },
+    [_c("app-pages"), _vm._v(" "), _c("app-categories")],
+    1
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -44711,7 +44864,7 @@ var render = function() {
     _vm._v(" "),
     _c(
       "main",
-      { staticClass: "app-main container", staticStyle: { width: "400px" } },
+      { staticClass: "app-main container" },
       [
         _c(
           "transition",
@@ -44729,7 +44882,55 @@ var render = function() {
       1
     ),
     _vm._v(" "),
-    _vm._m(0),
+    _c("footer", { staticClass: "app-footer text-center" }, [
+      _c("div", { staticClass: "container" }, [
+        _c("div", { staticClass: "app-footer-inner" }, [
+          _vm._m(0),
+          _vm._v(" "),
+          _c("p", [
+            _c("small", [
+              _vm._v("Made with "),
+              _c("i", { staticClass: "fas fa-heart heart" }),
+              _vm._v(" by "),
+              _c(
+                "a",
+                { attrs: { href: "https://abdalla.js.org", target: "_blank" } },
+                [_vm._v("Abdalla Arbab")]
+              ),
+              _vm._v(" from OTSI .inc "),
+              _vm.currentRoute == "auth"
+                ? _c("span", [
+                    _vm._v("- Icons made by "),
+                    _c(
+                      "a",
+                      {
+                        attrs: {
+                          href: "https://www.flaticon.com/",
+                          title: "Flaticon",
+                          target: "_blank"
+                        }
+                      },
+                      [_vm._v("Flaticon")]
+                    ),
+                    _vm._v(" and licensed by "),
+                    _c(
+                      "a",
+                      {
+                        attrs: {
+                          href: "http://creativecommons.org/licenses/by/3.0/",
+                          title: "Creative Commons BY 3.0",
+                          target: "_blank"
+                        }
+                      },
+                      [_vm._v("CC 3.0 BY")]
+                    )
+                  ])
+                : _vm._e()
+            ])
+          ])
+        ])
+      ])
+    ]),
     _vm._v(" "),
     _c("div", { staticClass: "fixed-alerts" }, [
       _c(
@@ -44763,43 +44964,7 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("footer", { staticClass: "app-footer text-center" }, [
-      _c("div", { staticClass: "container" }, [
-        _c("div", { staticClass: "app-footer-inner" }, [
-          _c("p", [_c("small", [_vm._v("© Codolog - Developers reminder")])]),
-          _vm._v(" "),
-          _c("p", [
-            _c("small", [
-              _vm._v("Made with "),
-              _c("i", { staticClass: "fas fa-heart heart" }),
-              _vm._v(" - Icons made by "),
-              _c(
-                "a",
-                {
-                  attrs: {
-                    href: "https://www.flaticon.com/",
-                    title: "Flaticon"
-                  }
-                },
-                [_vm._v("Flaticon")]
-              ),
-              _vm._v(" and licensed by "),
-              _c(
-                "a",
-                {
-                  attrs: {
-                    href: "http://creativecommons.org/licenses/by/3.0/",
-                    title: "Creative Commons BY 3.0",
-                    target: "_blank"
-                  }
-                },
-                [_vm._v("CC 3.0 BY")]
-              )
-            ])
-          ])
-        ])
-      ])
-    ])
+    return _c("p", [_c("small", [_vm._v("© Codolog - Developers reminder")])])
   },
   function() {
     var _vm = this
@@ -45990,6 +46155,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
 
 
 
@@ -46059,6 +46226,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     components: { contextMenu: __WEBPACK_IMPORTED_MODULE_3_vue_context_menu___default.a, Swatches: __WEBPACK_IMPORTED_MODULE_2_vue_swatches___default.a, draggable: __WEBPACK_IMPORTED_MODULE_1_vuedraggable___default.a },
     methods: {
         handleAddCategory: function handleAddCategory() {
+            var _this = this;
+
             if (this.add.name.length == 0) {
                 if (this.add.oneTime == false) {
                     flash('Category name field is required.', 3000);
@@ -46075,7 +46244,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     self.add.buttonLoading = false;
                     self.add.name = '';
                     self.add.color = '';
-                    self.$store.dispatch('addCategory', data.data.data);
+                    self.$store.dispatch('addCategory', {
+                        category: data.data.data,
+                        sort: _this.$store.state.sort.categories
+                    });
                 }).catch(function (error) {
                     self.add.buttonLoading = false;
                 });
@@ -46110,7 +46282,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }
         },
         handleSelectCard: function handleSelectCard(category) {
-            this.$store.dispatch('setSelectedCard', category);
+            this.$store.dispatch('setSelectedCategory', category);
         },
         handleActiveEditMode: function handleActiveEditMode() {
             this.edit.name = this.selectedCardName;
@@ -46119,22 +46291,25 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.$store.dispatch('setCategoryEditMode', true);
         },
         handleRemoveCategory: function handleRemoveCategory() {
-            var _this = this;
+            var _this2 = this;
 
             var self = this;
             var confirmBox = confirm("Are you sure you want to delete this category '" + this.selectedCardName + "'?");
             if (confirmBox == true) {
                 this.$store.dispatch('setCategoryEditMode', false);
                 __WEBPACK_IMPORTED_MODULE_0_axios___default.a.delete(route('category.destroy', { category: this.selectedCardId })).then(function (data) {
-                    self.$store.dispatch('deleteCategory', _this.selectedCardId);
+                    self.$store.dispatch('deleteCategory', _this2.selectedCardId);
                 });
             }
         },
-        handelCategoriesChange: function handelCategoriesChange() {
+        handelCategoriesSorting: function handelCategoriesSorting() {
             this.$store.dispatch('syncCategories', {
                 categories: this.categories,
                 sort: this.$store.state.sort.categories
             });
+        },
+        handleAddPage: function handleAddPage() {
+            this.$store.dispatch('setPageAddMode', true);
         }
     }
 });
@@ -48333,7 +48508,7 @@ var render = function() {
                                 handle: ".drag-handle"
                               }
                             },
-                            on: { change: _vm.handelCategoriesChange },
+                            on: { change: _vm.handelCategoriesSorting },
                             model: {
                               value: _vm.categories,
                               callback: function($$v) {
@@ -48357,7 +48532,8 @@ var render = function() {
                                   attrs: {
                                     "card-title": category.self,
                                     color: category.color,
-                                    category: category
+                                    single: category,
+                                    cardType: "category"
                                   },
                                   nativeOn: {
                                     contextmenu: [
@@ -48394,6 +48570,23 @@ var render = function() {
         "context-menu",
         { ref: "categoryMenu", attrs: { id: "context-menu" } },
         [
+          _c("li", [
+            _c(
+              "a",
+              {
+                staticClass: "normal",
+                attrs: { href: "#" },
+                on: {
+                  click: function($event) {
+                    $event.preventDefault()
+                    return _vm.handleAddPage($event)
+                  }
+                }
+              },
+              [_vm._v("Add page")]
+            )
+          ]),
+          _vm._v(" "),
           _c("li", [
             _c(
               "a",
@@ -48532,6 +48725,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
@@ -48540,8 +48739,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             sortMsg: 'Sort categories',
             createMsg: 'Create a category',
             exitMsg: 'Exit edit mode',
-            infoMsg: 'Pro tip',
-            helpText: 'You can order categories by dragging and dropping the three dots at the left of any category.'
+            infoMsg: 'Pro tips',
+            helpText: 'You can order categories by dragging and dropping the three dots at the left of any category.',
+            helpText2: 'You can right-click any category to edit or delete it.',
+            helpText3: 'You can right-click any category to add a new page.'
         };
     },
 
@@ -48616,7 +48817,13 @@ var render = function() {
           _vm._v(" "),
           _c("template", { slot: "popover" }, [
             _c("p", { staticClass: "popover-text" }, [
-              _vm._v(_vm._s(_vm.helpText))
+              _c("ul", { staticClass: "clean-list" }, [
+                _c("li", [_vm._v(_vm._s(_vm.helpText))]),
+                _vm._v(" "),
+                _c("li", [_vm._v(_vm._s(_vm.helpText2))]),
+                _vm._v(" "),
+                _c("li", [_vm._v(_vm._s(_vm.helpText3))])
+              ])
             ])
           ])
         ],
@@ -48910,10 +49117,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         return {};
     },
 
-    props: ['cardTitle', 'color', 'category'],
+    props: ['cardTitle', 'color', 'single', 'cardType'],
     methods: {
         handleSelectCard: function handleSelectCard() {
-            this.$store.dispatch('setSelectedCard', this.category);
+            this.$store.dispatch('setSelectedCard', {
+                single: this.single,
+                cardType: this.cardType
+            });
         }
     }
 });
@@ -49558,6 +49768,1063 @@ if (false) {
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 93 */,
+/* 94 */,
+/* 95 */,
+/* 96 */,
+/* 97 */,
+/* 98 */,
+/* 99 */,
+/* 100 */,
+/* 101 */,
+/* 102 */,
+/* 103 */,
+/* 104 */,
+/* 105 */,
+/* 106 */,
+/* 107 */,
+/* 108 */,
+/* 109 */,
+/* 110 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(0)
+/* script */
+var __vue_script__ = __webpack_require__(111)
+/* template */
+var __vue_template__ = __webpack_require__(112)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/javascript/components/AppPages.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-4a3f55fe", Component.options)
+  } else {
+    hotAPI.reload("data-v-4a3f55fe", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 111 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_axios__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_axios___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_axios__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vuedraggable__ = __webpack_require__(72);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vuedraggable___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_vuedraggable__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vue_context_menu__ = __webpack_require__(75);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vue_context_menu___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_vue_context_menu__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    data: function data() {
+        return {
+            add: {
+                title: '',
+                oneTime: false,
+                oneTimeError: false,
+                buttonLoading: false
+            },
+            edit: {
+                title: '',
+                id: null,
+                category_id: null,
+                oneTime: false,
+                oneTimeError: false,
+                buttonLoading: false
+            },
+            loadingClass: 'button-loader',
+            lessHeightClass: 'less-height',
+            selectedCardClass: 'selected',
+            hideThisSectionClass: 'slide-hide'
+        };
+    },
+
+    components: { contextMenu: __WEBPACK_IMPORTED_MODULE_2_vue_context_menu___default.a, draggable: __WEBPACK_IMPORTED_MODULE_1_vuedraggable___default.a },
+    computed: {
+        addFormVisiblity: function addFormVisiblity() {
+            return this.$store.state.formVisiblity.pages.add;
+        },
+        editFormVisiblity: function editFormVisiblity() {
+            return this.$store.state.formVisiblity.pages.edit;
+        },
+        selectedCategoryId: function selectedCategoryId() {
+            return this.$store.state.selectedCard.categories.id;
+        },
+        selectedCardId: function selectedCardId() {
+            return this.$store.state.selectedCard.pages.id;
+        },
+        selectedCardTitle: function selectedCardTitle() {
+            return this.$store.state.selectedCard.pages.data.title;
+        },
+        error: function error() {
+            return this.$store.state.error.pages;
+        },
+        loading: function loading() {
+            return this.$store.state.loading.pages;
+        },
+
+        pages: {
+            get: function get() {
+                return this.$store.getters.sortedPages;
+            },
+            set: function set(value) {
+                this.$store.dispatch('orderPages', value);
+            }
+        },
+        pageFormVisibility: function pageFormVisibility() {
+            return this.$store.state.pageFormVisibility;
+        },
+        hasPages: function hasPages() {
+            return this.$store.getters.hasPages;
+        }
+    },
+    methods: {
+        handleAddPage: function handleAddPage() {
+            var _this = this;
+
+            if (this.add.title.length == 0) {
+                if (this.add.oneTime == false) {
+                    flash('Page title field is required.', 3000);
+                    this.add.oneTime = true;
+                }
+                document.getElementById('addPage').focus();
+            } else if (this.selectedCategoryId == undefined) {
+                var self = this;
+                if (this.add.oneTimeError == false) {
+                    flash('Select the category that you want that page on.', 3000);
+                    this.add.oneTimeError = true;
+                    setTimeout(function () {
+                        self.add.oneTimeError = false;
+                    }, 3300);
+                }
+                document.getElementById('addPage').focus();
+            } else {
+                this.add.buttonLoading = true;
+                var _self = this;
+                __WEBPACK_IMPORTED_MODULE_0_axios___default.a.post(route('page.store', { category: this.selectedCategoryId }), {
+                    title: this.add.title
+                }).then(function (data) {
+                    _self.add.buttonLoading = false;
+                    _self.add.title = '';
+                    _self.$store.dispatch('addPage', {
+                        page: data.data.data,
+                        sort: _this.$store.state.sort.pages
+                    });
+                }).catch(function (error) {
+                    _self.add.buttonLoading = false;
+                });
+            }
+        },
+        handleEditPage: function handleEditPage() {
+            if (this.edit.title.length == 0) {
+                if (this.edit.oneTime == false) {
+                    flash('Page title field is required.', 3000);
+                    this.edit.oneTime = true;
+                }
+                document.getElementById('editpage').focus();
+            } else {
+                this.edit.buttonLoading = true;
+                var self = this;
+                __WEBPACK_IMPORTED_MODULE_0_axios___default.a.patch(route('page.update', { page: this.edit.id }), {
+                    title: this.edit.title
+                }).then(function (data) {
+                    self.edit.buttonLoading = false;
+                    self.$store.dispatch('setPageEditMode', false);
+                    self.$store.dispatch('editPage', {
+                        id: self.edit.id,
+                        page: data.data.data
+                    });
+                    self.edit.title = '';
+                    self.edit.id = null;
+                }).catch(function (error) {
+                    self.edit.buttonLoading = false;
+                });
+            }
+        },
+        handleSelectCard: function handleSelectCard(page) {
+            this.$store.dispatch('setSelectedPage', page);
+        },
+        handleActiveEditMode: function handleActiveEditMode() {
+            this.edit.title = this.selectedCardTitle;
+            this.$store.dispatch('setCategoryEditMode', true);
+        },
+        handleRemovePage: function handleRemovePage() {
+            var _this2 = this;
+
+            var self = this;
+            var confirmBox = confirm("Are you sure you want to delete this category '" + this.selectedCardName + "'?");
+            if (confirmBox == true) {
+                this.$store.dispatch('setCategoryEditMode', false);
+                __WEBPACK_IMPORTED_MODULE_0_axios___default.a.delete(route('category.destroy', { category: this.selectedCardId })).then(function (data) {
+                    self.$store.dispatch('deleteCategory', _this2.selectedCardId);
+                });
+            }
+        },
+        handelPagesSorting: function handelPagesSorting() {
+            this.$store.dispatch('syncPages', {
+                pages: this.pages,
+                sort: this.$store.state.sort.pages
+            });
+        }
+    }
+});
+
+/***/ }),
+/* 112 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass: "app-pages",
+      class: [_vm.pageFormVisibility == true ? _vm.hideThisSectionClass : ""]
+    },
+    [
+      _c("pages-options"),
+      _vm._v(" "),
+      _c("transition", { attrs: { name: "form-fade" } }, [
+        _vm.addFormVisiblity
+          ? _c("div", { staticClass: "page-form" }, [
+              _c(
+                "form",
+                {
+                  on: {
+                    submit: function($event) {
+                      $event.preventDefault()
+                      return _vm.handleAddPage($event)
+                    }
+                  }
+                },
+                [
+                  _c("div", { staticClass: "input-group" }, [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.add.title,
+                          expression: "add.title"
+                        }
+                      ],
+                      staticClass: "input page-input",
+                      attrs: {
+                        type: "text",
+                        id: "addPage",
+                        placeholder: "Page title"
+                      },
+                      domProps: { value: _vm.add.title },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(_vm.add, "title", $event.target.value)
+                        }
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c(
+                      "button",
+                      {
+                        staticClass: "button",
+                        class: [_vm.add.buttonLoading ? _vm.loadingClass : ""],
+                        attrs: {
+                          type: "submit",
+                          disabled: _vm.add.buttonLoading
+                        }
+                      },
+                      [_vm._v("Add")]
+                    )
+                  ])
+                ]
+              )
+            ])
+          : _vm._e(),
+        _vm._v(" "),
+        _vm.editFormVisiblity
+          ? _c("div", { staticClass: "page-form" }, [
+              _c(
+                "form",
+                {
+                  on: {
+                    submit: function($event) {
+                      $event.preventDefault()
+                      return _vm.handleEditPage($event)
+                    }
+                  }
+                },
+                [
+                  _c("div", { staticClass: "input-group" }, [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.edit.title,
+                          expression: "edit.title"
+                        }
+                      ],
+                      staticClass: "input page-input",
+                      attrs: {
+                        type: "text",
+                        id: "editPage",
+                        placeholder: "Page title"
+                      },
+                      domProps: { value: _vm.edit.title },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(_vm.edit, "title", $event.target.value)
+                        }
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c(
+                      "button",
+                      {
+                        staticClass: "button",
+                        class: [_vm.edit.buttonLoading ? _vm.loadingClass : ""],
+                        attrs: {
+                          type: "submit",
+                          disabled: _vm.edit.buttonLoading
+                        }
+                      },
+                      [_vm._v("Edit")]
+                    )
+                  ])
+                ]
+              )
+            ])
+          : _vm._e()
+      ]),
+      _vm._v(" "),
+      _c("div", { directives: [{ name: "bar", rawName: "v-bar" }] }, [
+        _c(
+          "div",
+          {
+            staticClass: "app-cards",
+            class: [
+              _vm.addFormVisiblity ? _vm.lessHeightClass : "",
+              _vm.editFormVisiblity ? _vm.lessHeightClass : ""
+            ]
+          },
+          [
+            _vm.error
+              ? _c("error")
+              : _vm.loading
+                ? _c("div", { staticClass: "loader-bg h100" })
+                : _vm.pages.length > 0
+                  ? _c(
+                      "div",
+                      { staticClass: "app-cards-container" },
+                      [
+                        _c(
+                          "draggable",
+                          {
+                            attrs: {
+                              options: {
+                                group: "pages",
+                                animation: 100,
+                                handle: ".drag-handle"
+                              }
+                            },
+                            on: { change: _vm.handelPagesSorting },
+                            model: {
+                              value: _vm.pages,
+                              callback: function($$v) {
+                                _vm.pages = $$v
+                              },
+                              expression: "pages"
+                            }
+                          },
+                          [
+                            _c(
+                              "transition-group",
+                              { attrs: { name: "list", tag: "div" } },
+                              _vm._l(_vm.pages, function(page) {
+                                return _c("card", {
+                                  key: page.id,
+                                  class: [
+                                    _vm.selectedCardId == page.id
+                                      ? _vm.selectedCardClass
+                                      : ""
+                                  ],
+                                  attrs: {
+                                    "card-title": page.title,
+                                    single: page,
+                                    cardType: "page"
+                                  },
+                                  nativeOn: {
+                                    contextmenu: [
+                                      function($event) {
+                                        _vm.handleSelectCard(page)
+                                      },
+                                      function($event) {
+                                        $event.preventDefault()
+                                        return _vm.$refs.pageMenu.open($event)
+                                      }
+                                    ]
+                                  }
+                                })
+                              })
+                            )
+                          ],
+                          1
+                        )
+                      ],
+                      1
+                    )
+                  : _vm.hasPages == false
+                    ? _c("empty-pages", { staticClass: "h100" })
+                    : _c("empty", {
+                        staticClass: "h100",
+                        attrs: { icon: "pages", name: "Pages" }
+                      })
+          ],
+          1
+        )
+      ]),
+      _vm._v(" "),
+      _c("context-menu", { ref: "pageMenu", attrs: { id: "context-menu" } }, [
+        _c("li", [
+          _c(
+            "a",
+            {
+              staticClass: "normal",
+              attrs: { href: "#" },
+              on: {
+                click: function($event) {
+                  $event.preventDefault()
+                  return _vm.handleActiveEditMode($event)
+                }
+              }
+            },
+            [_vm._v("Edit")]
+          )
+        ]),
+        _vm._v(" "),
+        _c("li", [
+          _c(
+            "a",
+            {
+              staticClass: "danger",
+              attrs: { href: "#" },
+              on: {
+                click: function($event) {
+                  $event.preventDefault()
+                  return _vm.handleRemovePage($event)
+                }
+              }
+            },
+            [_vm._v("Delete")]
+          )
+        ])
+      ])
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-4a3f55fe", module.exports)
+  }
+}
+
+/***/ }),
+/* 113 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(0)
+/* script */
+var __vue_script__ = __webpack_require__(114)
+/* template */
+var __vue_template__ = __webpack_require__(115)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/javascript/components/pagesOptions.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-9f35e616", Component.options)
+  } else {
+    hotAPI.reload("data-v-9f35e616", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 114 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    data: function data() {
+        return {
+            activeClass: 'active',
+            sortMsg: 'Sort pages',
+            createMsg: 'Create a page',
+            exitMsg: 'Exit edit mode',
+            infoMsg: 'Pro tips',
+            helpText: 'You can order pages by dragging and dropping the three dots at the left of any page.',
+            helpText2: 'You can right-click any page to edit or delete it.'
+        };
+    },
+
+    methods: {
+        handleSortChange: function handleSortChange() {
+            var sort = this.$store.state.sort.pages == 'desc' ? 'asc' : 'desc';
+            this.$store.dispatch('setPagesSort', sort);
+        },
+        handelShowAddForm: function handelShowAddForm() {
+            this.$store.dispatch('setPagesAddFormVisibility', !this.addFormVisiblity);
+        },
+        handelHideEditForm: function handelHideEditForm() {
+            this.$store.dispatch('setPagesEditFormVisibility', false);
+        }
+    },
+    computed: {
+        addFormVisiblity: function addFormVisiblity() {
+            return this.$store.state.formVisiblity.pages.add;
+        },
+        editFormVisiblity: function editFormVisiblity() {
+            return this.$store.state.formVisiblity.pages.edit;
+        },
+
+        transparentAsc: function transparentAsc() {
+            return this.$store.state.sort.pages == 'asc' ? '' : 'opa05';
+        },
+        transparentDesc: function transparentDesc() {
+            return this.$store.state.sort.pages == 'desc' ? '' : 'opa05';
+        }
+    }
+});
+
+/***/ }),
+/* 115 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "app-section-head" },
+    [
+      _c("h2", { staticClass: "app-heading" }, [_vm._v("Pages")]),
+      _vm._v(" "),
+      _c(
+        "v-popover",
+        { attrs: { offset: "16" } },
+        [
+          _c(
+            "button",
+            {
+              directives: [
+                {
+                  name: "tooltip",
+                  rawName: "v-tooltip.top-center",
+                  value: _vm.infoMsg,
+                  expression: "infoMsg",
+                  modifiers: { "top-center": true }
+                }
+              ],
+              staticClass: "app-info-button button",
+              attrs: { type: "button" }
+            },
+            [
+              _c("span", { staticClass: "fa-layers fa-fw" }, [
+                _c("i", { staticClass: "fas fa-info" })
+              ])
+            ]
+          ),
+          _vm._v(" "),
+          _c("template", { slot: "popover" }, [
+            _c("p", { staticClass: "popover-text" }, [
+              _c("ul", { staticClass: "clean-list" }, [
+                _c("li", [_vm._v(_vm._s(_vm.helpText))]),
+                _vm._v(" "),
+                _c("li", [_vm._v(_vm._s(_vm.helpText2))])
+              ])
+            ])
+          ])
+        ],
+        2
+      ),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          directives: [
+            {
+              name: "tooltip",
+              rawName: "v-tooltip.top-center",
+              value: _vm.sortMsg,
+              expression: "sortMsg",
+              modifiers: { "top-center": true }
+            }
+          ],
+          staticClass: "app-filter-button button",
+          attrs: { type: "button" },
+          on: { click: _vm.handleSortChange }
+        },
+        [
+          _c("span", { staticClass: "fa-layers fa-fw" }, [
+            _c("span", { class: _vm.transparentAsc }, [
+              _c("i", { staticClass: "fas fa-sort-up" })
+            ]),
+            _vm._v(" "),
+            _c("span", { class: _vm.transparentDesc }, [
+              _c("i", { staticClass: "fas fa-sort-down" })
+            ])
+          ])
+        ]
+      ),
+      _vm._v(" "),
+      !_vm.editFormVisiblity
+        ? _c(
+            "button",
+            {
+              directives: [
+                {
+                  name: "tooltip",
+                  rawName: "v-tooltip.top-center",
+                  value: _vm.createMsg,
+                  expression: "createMsg",
+                  modifiers: { "top-center": true }
+                }
+              ],
+              staticClass: "app-add-button button",
+              class: [_vm.addFormVisiblity ? _vm.activeClass : ""],
+              on: { click: _vm.handelShowAddForm }
+            },
+            [_vm._m(0)]
+          )
+        : _vm._e(),
+      _vm._v(" "),
+      _vm.editFormVisiblity
+        ? _c(
+            "button",
+            {
+              directives: [
+                {
+                  name: "tooltip",
+                  rawName: "v-tooltip.top-center",
+                  value: _vm.exitMsg,
+                  expression: "exitMsg",
+                  modifiers: { "top-center": true }
+                }
+              ],
+              staticClass: "app-exit-button button danger",
+              on: { click: _vm.handelHideEditForm }
+            },
+            [_vm._m(1)]
+          )
+        : _vm._e()
+    ],
+    1
+  )
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("span", { staticClass: "fa-layers fa-fw" }, [
+      _c("i", { staticClass: "far fa-plus-square" })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("span", { staticClass: "fa-layers fa-fw" }, [
+      _c("i", { staticClass: "far fa-times-circle" })
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-9f35e616", module.exports)
+  }
+}
+
+/***/ }),
+/* 116 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(0)
+/* script */
+var __vue_script__ = __webpack_require__(117)
+/* template */
+var __vue_template__ = __webpack_require__(118)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/javascript/components/EmptyPages.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-3bd67792", Component.options)
+  } else {
+    hotAPI.reload("data-v-3bd67792", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 117 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    data: function data() {
+        return {};
+    }
+});
+
+/***/ }),
+/* 118 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "h100 app-empty" }, [
+    _c("div", { staticClass: "empty-inner" }, [
+      _c("div", { staticClass: "empty-icon" }, [
+        _c(
+          "svg",
+          {
+            staticStyle: { "enable-background": "new 0 0 512.001 512.001" },
+            attrs: {
+              version: "1.1",
+              id: "Capa_1",
+              xmlns: "http://www.w3.org/2000/svg",
+              "xmlns:xlink": "http://www.w3.org/1999/xlink",
+              x: "0px",
+              y: "0px",
+              viewBox: "0 0 512.001 512.001",
+              "xml:space": "preserve"
+            }
+          },
+          [
+            _c("path", {
+              staticStyle: { fill: "#FEA832" },
+              attrs: {
+                d:
+                  "M451,246.099V437c0,6.599-4.2,12.299-10.201,14.099l-180,60c-0.599,0.3-0.899,0.3-1.5,0.601 c-1.199,0.3-2.1,0.3-3.3,0.3c-1.199,0-2.1,0-3.3-0.3c-0.3-0.3-0.901-0.3-1.5-0.601l-180-60C65.2,449.299,61,443.599,61,437V246.099 c0-8.399,6.599-15,15-15h360C444.401,231.099,451,237.7,451,246.099z"
+              }
+            }),
+            _vm._v(" "),
+            _c("path", {
+              staticStyle: { fill: "#FE9923" },
+              attrs: {
+                d:
+                  "M451,181l-114.373-7.499l-86.823-15.176L256,121L316.646,8.294 c3.279-6.558,10.819-9.785,17.828-7.628l166.931,52.056c8.859,2.726,13.15,12.754,9.005,21.045L451,181z"
+              }
+            }),
+            _vm._v(" "),
+            _c("path", {
+              staticStyle: { fill: "#FCBF29" },
+              attrs: {
+                d:
+                  "M61,181l114.375-7.5L211,164.846L256,121L195.354,8.294c-3.279-6.558-10.819-9.785-17.828-7.628 L10.596,52.721C1.736,55.447-2.555,65.476,1.59,73.766L61,181z"
+              }
+            }),
+            _vm._v(" "),
+            _c("path", {
+              staticStyle: { fill: "#FE9923" },
+              attrs: {
+                d:
+                  "M451,246.099V437c0,6.599-4.2,12.299-10.201,14.099l-180,60c-0.599,0.3-0.899,0.3-1.5,0.601 c-1.199,0.3-2.1,0.3-3.3,0.3V231.099h180C444.401,231.099,451,237.7,451,246.099z"
+              }
+            }),
+            _vm._v(" "),
+            _c("path", {
+              staticStyle: { fill: "#FCBF29" },
+              attrs: {
+                d:
+                  "M501.403,278l-174.715,55.336c-6.342,1.951-13.212-0.496-16.892-6.016L256,241l29.865-39.189 L391,190.231L451,181l58.473,74.343C515.039,263.693,510.995,275.049,501.403,278z"
+              }
+            }),
+            _vm._v(" "),
+            _c("path", {
+              staticStyle: { fill: "#FEDB41" },
+              attrs: {
+                d:
+                  "M10.597,278l174.715,54.016c6.342,1.951,13.212-0.496,16.892-6.016L256,241l-32.515-40.005 l-97.349-9.184L61,181L2.527,255.343C-3.04,263.693,1.005,275.049,10.597,278z"
+              }
+            }),
+            _vm._v(" "),
+            _c("polygon", {
+              staticStyle: { fill: "#FEA832" },
+              attrs: { points: "451,181 256,241 61,181 256,121 " }
+            }),
+            _vm._v(" "),
+            _c("polygon", {
+              staticStyle: { fill: "#FE8821" },
+              attrs: { points: "451,181 256,241 256,121 " }
+            }),
+            _vm._v(" "),
+            _c("g"),
+            _vm._v(" "),
+            _c("g"),
+            _vm._v(" "),
+            _c("g"),
+            _vm._v(" "),
+            _c("g"),
+            _vm._v(" "),
+            _c("g"),
+            _vm._v(" "),
+            _c("g"),
+            _vm._v(" "),
+            _c("g"),
+            _vm._v(" "),
+            _c("g"),
+            _vm._v(" "),
+            _c("g"),
+            _vm._v(" "),
+            _c("g"),
+            _vm._v(" "),
+            _c("g"),
+            _vm._v(" "),
+            _c("g"),
+            _vm._v(" "),
+            _c("g"),
+            _vm._v(" "),
+            _c("g"),
+            _vm._v(" "),
+            _c("g")
+          ]
+        )
+      ]),
+      _vm._v(" "),
+      _c("p", { staticClass: "empty-text" }, [
+        _vm._v("You don't have any pages in this category")
+      ])
+    ])
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-3bd67792", module.exports)
+  }
+}
 
 /***/ })
 /******/ ]);

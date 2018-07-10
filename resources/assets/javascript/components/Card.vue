@@ -24,10 +24,13 @@
 
             }
         },
-        props: [ 'cardTitle', 'color', 'category' ],
+        props: [ 'cardTitle', 'color', 'single', 'cardType' ],
         methods: {
             handleSelectCard () {
-                this.$store.dispatch('setSelectedCard', this.category);
+                this.$store.dispatch('setSelectedCard', {
+                    single: this.single,
+                    cardType: this.cardType
+                });
             }
         }
     }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Resources\PageCollection;
+use App\Http\Resources\Page as PageRow;
 use App\Http\Requests\StorePage;
 use App\Http\Requests\UpdatePage;
 use App\Http\Requests\DragPage;
@@ -20,21 +21,17 @@ class PageController extends Controller
      */
     public function all()
     {
-        return new PageCollection(Page::whereUserId(Auth::id())->orderBy('order', 'desc')->get());
+        return new PageCollection(Page::whereUserId(Auth::id())->ordered()->get());
     }
 
     public function drag(DragPage $request)
     {
-        $pages = Page::all();
-        foreach ($pages as $page) {
-            $page->timestamps = false;
-            $id = $page->id;
-            foreach ($request->pages as $pageFrontEnd) {
-                if ($pageFrontEnd['id'] == $id) {
-                    $page->update(['order' => $pageFrontEnd['order']]);
-                }
-            }
-        }
+        $pagesId = $request->pages;
+        $pages = Page::setNewOrder($pagesId);
+
+        return response()->json([
+            'message' => 'Pages have ordered successfully.'
+        ], 200);
     }
 
     /**
@@ -49,11 +46,12 @@ class PageController extends Controller
 
         $page->user_id = Auth::id();
         $page->category_id = $category->id;
-        $page->order = Page::whereUserId(Auth::id())->count() + 1;
         $page->title = $request->title;
-        $page->self = \Purifier::clean($request->markdown);
+        $page->self = null;
 
         $page->save();
+
+        return new PageRow($page);
     }
 
     /**
@@ -69,6 +67,8 @@ class PageController extends Controller
         $page->self = \Purifier::clean($request->markdown);
 
         $page->save();
+
+        return new PageRow($page);
     }
 
     /**

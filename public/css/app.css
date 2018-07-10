@@ -4143,6 +4143,11 @@ button.button-lg {
   opacity: 0.7;
 }
 
+.clean-list {
+  margin: 0;
+  padding-left: 15px;
+}
+
 .vb > .vb-dragger {
   z-index: 5;
   width: 9px;
@@ -4270,7 +4275,6 @@ button.button-lg {
 .tooltip.popover .popover-text {
   font-size: 12px;
   margin: 0;
-  text-align: center;
 }
 
 .tooltip[aria-hidden='true'] {
@@ -4285,6 +4289,10 @@ button.button-lg {
   opacity: 1;
   -webkit-transition: opacity .15s;
   transition: opacity .15s;
+}
+
+.v-popover .trigger {
+  outline: none;
 }
 
 .app-header .app-navbar {
