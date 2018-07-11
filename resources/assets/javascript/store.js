@@ -31,7 +31,7 @@ const store = new Vuex.Store({
         error: {
             categories: false,
             pages: false,
-            // page: false
+            page: false
         },
         pageFormVisiblity: false,
         formVisiblity: {
@@ -55,7 +55,8 @@ const store = new Vuex.Store({
             pages: {
                 id: undefined,
                 data: {
-                    title: ''
+                    title: '',
+                    markdown: ''
                 }
             },
         },
@@ -135,7 +136,7 @@ const store = new Vuex.Store({
             state.categories = _.orderBy(categories, 'order', state.sort.categories);
         },
         setPages (state, pages) {
-            state.pages = pages;
+            state.pages = _.orderBy(pages, 'order', state.sort.pages);
         },
         setCategoriesAddFormVisibility (state, visibility) {
             state.formVisiblity.categories.add = visibility;
@@ -149,8 +150,8 @@ const store = new Vuex.Store({
             state.selectedCard.categories.data.color = category.color;
         },
         setCategoryEditMode (state, mode) {
-            state.formVisiblity.categories.edit = mode;
             state.formVisiblity.categories.add = false;
+            state.formVisiblity.categories.edit = mode;
         },
         addCategoryAsc(state, category) {
             state.categories.push({
@@ -185,6 +186,7 @@ const store = new Vuex.Store({
         },
         setPagesSort(state, sort) {
             state.sort.pages = sort;
+            state.pages = state.pages.reverse();
         },
         setPagesAddFormVisibility (state, visibility) {
             state.formVisiblity.pages.add = visibility;
@@ -198,7 +200,7 @@ const store = new Vuex.Store({
                 category_id: page.category_id,
                 order: page.order,
                 title: page.title,
-                markdown: page.self
+                markdown: page.markdown
             });
         },
         addPageDesc(state, page) {
@@ -207,12 +209,12 @@ const store = new Vuex.Store({
                 category_id: page.category_id,
                 order: page.order,
                 title: page.title,
-                markdown: page.self
+                markdown: page.markdown
             });
         },
         setPageEditMode (state, mode) {
-            state.formVisiblity.pages.edit = mode;
             state.formVisiblity.pages.add = false;
+            state.formVisiblity.pages.edit = mode;
         },
         editPage(state, payload) {
             let position = state.pages.findIndex((element) => {
@@ -226,9 +228,16 @@ const store = new Vuex.Store({
         setSelectedPage (state, page) {
             state.selectedCard.pages.id = page.id;
             state.selectedCard.pages.data.title = page.title;
+            state.selectedCard.pages.data.markdown = page.markdown;
         },
         setPageAddMode (state, mode) {
             state.formVisiblity.pages.add = mode;
+        },
+        deletePage (state, id) {
+            let position = state.pages.findIndex((element) => {
+                return element.id == id;
+            });
+            state.pages.splice(position, 1);
         },
     },
     actions: {
@@ -421,48 +430,19 @@ const store = new Vuex.Store({
         setSelectedPage ({commit}, page) {
             commit('setSelectedPage', page);
         },
-        setSelectedCard ({commit}, payload) {
+        setSelectedCard (context, payload) {
             if(payload.cardType == 'category') {
-                commit('setSelectedCategory', payload.single);
+                context.commit('setSelectedCategory', payload.single);
             } else {
-                commit('setSelectedPage', payload.single);
+                context.commit('setSelectedPage', payload.single);
             }
         },
         setPageAddMode ({commit}, mode) {
             commit('setPageAddMode', mode);
+        },
+        deletePage ({commit}, id) {
+            commit('deletePage', id);
         }
-        // async syncCategories (context) {
-        //     context.commit('categoryError', false);
-        //     try {
-        //         const data = await axios.get(route('category.all'));
-        //         context.commit('setCategories', data.data.data);
-        //     } catch (error) {
-        //         context.commit('categoryError', true);
-        //     }
-        // },
-//         async syncPages () {
-//             context.commit('pageError', false);
-//             try {
-//                 const data = await axios.get(route('page.all'), {
-//                     headers: {
-//                         Authorization: context.getters.api_token
-//                     }
-//                 });
-//                 context.commit('setPages', data.data.data);
-//             } catch (error) {
-//                 context.commit('pageError', true);
-//             }
-//         },
-//         setDefaults ({commit}) {
-            
-//             commit('setCategorySort', localStorage.getItem('categoriesSort'));
-            
-//             commit('setPagesSort', localStorage.getItem('pagesSort'));
-//         },
-//         setCategoriesSort(context, sort) {
-//             context.commit('setCategorySort', sort);
-//             localStorage.setItem('categoriesSort', sort);
-//         },
     }
 });
 

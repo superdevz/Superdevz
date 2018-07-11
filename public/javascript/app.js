@@ -14512,8 +14512,8 @@ var store = new __WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */].Store({
         },
         error: {
             categories: false,
-            pages: false
-            // page: false
+            pages: false,
+            page: false
         },
         pageFormVisiblity: false,
         formVisiblity: {
@@ -14537,7 +14537,8 @@ var store = new __WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */].Store({
             pages: {
                 id: undefined,
                 data: {
-                    title: ''
+                    title: '',
+                    markdown: ''
                 }
             }
         },
@@ -14623,7 +14624,7 @@ var store = new __WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */].Store({
             state.categories = __WEBPACK_IMPORTED_MODULE_2_lodash___default.a.orderBy(categories, 'order', state.sort.categories);
         },
         setPages: function setPages(state, pages) {
-            state.pages = pages;
+            state.pages = __WEBPACK_IMPORTED_MODULE_2_lodash___default.a.orderBy(pages, 'order', state.sort.pages);
         },
         setCategoriesAddFormVisibility: function setCategoriesAddFormVisibility(state, visibility) {
             state.formVisiblity.categories.add = visibility;
@@ -14637,8 +14638,8 @@ var store = new __WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */].Store({
             state.selectedCard.categories.data.color = category.color;
         },
         setCategoryEditMode: function setCategoryEditMode(state, mode) {
-            state.formVisiblity.categories.edit = mode;
             state.formVisiblity.categories.add = false;
+            state.formVisiblity.categories.edit = mode;
         },
         addCategoryAsc: function addCategoryAsc(state, category) {
             state.categories.push({
@@ -14673,6 +14674,7 @@ var store = new __WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */].Store({
         },
         setPagesSort: function setPagesSort(state, sort) {
             state.sort.pages = sort;
+            state.pages = state.pages.reverse();
         },
         setPagesAddFormVisibility: function setPagesAddFormVisibility(state, visibility) {
             state.formVisiblity.pages.add = visibility;
@@ -14686,7 +14688,7 @@ var store = new __WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */].Store({
                 category_id: page.category_id,
                 order: page.order,
                 title: page.title,
-                markdown: page.self
+                markdown: page.markdown
             });
         },
         addPageDesc: function addPageDesc(state, page) {
@@ -14695,12 +14697,12 @@ var store = new __WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */].Store({
                 category_id: page.category_id,
                 order: page.order,
                 title: page.title,
-                markdown: page.self
+                markdown: page.markdown
             });
         },
         setPageEditMode: function setPageEditMode(state, mode) {
-            state.formVisiblity.pages.edit = mode;
             state.formVisiblity.pages.add = false;
+            state.formVisiblity.pages.edit = mode;
         },
         editPage: function editPage(state, payload) {
             var position = state.pages.findIndex(function (element) {
@@ -14714,9 +14716,16 @@ var store = new __WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */].Store({
         setSelectedPage: function setSelectedPage(state, page) {
             state.selectedCard.pages.id = page.id;
             state.selectedCard.pages.data.title = page.title;
+            state.selectedCard.pages.data.markdown = page.markdown;
         },
         setPageAddMode: function setPageAddMode(state, mode) {
             state.formVisiblity.pages.add = mode;
+        },
+        deletePage: function deletePage(state, id) {
+            var position = state.pages.findIndex(function (element) {
+                return element.id == id;
+            });
+            state.pages.splice(position, 1);
         }
     },
     actions: {
@@ -14941,53 +14950,23 @@ var store = new __WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */].Store({
 
             commit('setSelectedPage', page);
         },
-        setSelectedCard: function setSelectedCard(_ref21, payload) {
-            var commit = _ref21.commit;
-
+        setSelectedCard: function setSelectedCard(context, payload) {
             if (payload.cardType == 'category') {
-                commit('setSelectedCategory', payload.single);
+                context.commit('setSelectedCategory', payload.single);
             } else {
-                commit('setSelectedPage', payload.single);
+                context.commit('setSelectedPage', payload.single);
             }
         },
-        setPageAddMode: function setPageAddMode(_ref22, mode) {
-            var commit = _ref22.commit;
+        setPageAddMode: function setPageAddMode(_ref21, mode) {
+            var commit = _ref21.commit;
 
             commit('setPageAddMode', mode);
+        },
+        deletePage: function deletePage(_ref22, id) {
+            var commit = _ref22.commit;
+
+            commit('deletePage', id);
         }
-        // async syncCategories (context) {
-        //     context.commit('categoryError', false);
-        //     try {
-        //         const data = await axios.get(route('category.all'));
-        //         context.commit('setCategories', data.data.data);
-        //     } catch (error) {
-        //         context.commit('categoryError', true);
-        //     }
-        // },
-        //         async syncPages () {
-        //             context.commit('pageError', false);
-        //             try {
-        //                 const data = await axios.get(route('page.all'), {
-        //                     headers: {
-        //                         Authorization: context.getters.api_token
-        //                     }
-        //                 });
-        //                 context.commit('setPages', data.data.data);
-        //             } catch (error) {
-        //                 context.commit('pageError', true);
-        //             }
-        //         },
-        //         setDefaults ({commit}) {
-
-        //             commit('setCategorySort', localStorage.getItem('categoriesSort'));
-
-        //             commit('setPagesSort', localStorage.getItem('pagesSort'));
-        //         },
-        //         setCategoriesSort(context, sort) {
-        //             context.commit('setCategorySort', sort);
-        //             localStorage.setItem('categoriesSort', sort);
-        //         },
-
     }
 });
 
@@ -15365,7 +15344,8 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('v-popover', __WEBPACK_IMP
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('app-pages', __webpack_require__(110));
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('pages-options', __webpack_require__(113));
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('empty-pages', __webpack_require__(116));
-// Vue.component('app-page', require('./components/AppPage.vue'));
+__WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('app-page', __webpack_require__(128));
+__WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('app-page-content', __webpack_require__(361));
 // Vue.component('page-form', require('./components/PageForm.vue'));
 // Vue.component('pages-head', require('./components/PagesHead.vue'));
 // Vue.component('error', require('./components/Error.vue'));
@@ -43806,6 +43786,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
@@ -43836,7 +43817,13 @@ var render = function() {
   return _c(
     "div",
     { staticClass: "app-container" },
-    [_c("app-pages"), _vm._v(" "), _c("app-categories")],
+    [
+      _c("app-page"),
+      _vm._v(" "),
+      _c("app-pages"),
+      _vm._v(" "),
+      _c("app-categories")
+    ],
     1
   )
 }
@@ -46157,6 +46144,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -46282,6 +46281,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }
         },
         handleSelectCard: function handleSelectCard(category) {
+            this.$store.dispatch('setPageEditMode', false);
             this.$store.dispatch('setSelectedCategory', category);
         },
         handleActiveEditMode: function handleActiveEditMode() {
@@ -48568,7 +48568,11 @@ var render = function() {
       _vm._v(" "),
       _c(
         "context-menu",
-        { ref: "categoryMenu", attrs: { id: "context-menu" } },
+        {
+          ref: "categoryMenu",
+          staticClass: "app-context-menu",
+          attrs: { id: "context-menu" }
+        },
         [
           _c("li", [
             _c(
@@ -48583,7 +48587,10 @@ var render = function() {
                   }
                 }
               },
-              [_vm._v("Add page")]
+              [
+                _c("i", { staticClass: "far fa-plus-square" }),
+                _vm._v(" Add page\n            ")
+              ]
             )
           ]),
           _vm._v(" "),
@@ -48600,7 +48607,10 @@ var render = function() {
                   }
                 }
               },
-              [_vm._v("Edit")]
+              [
+                _c("i", { staticClass: "fas fa-pen-square" }),
+                _vm._v(" Edit\n            ")
+              ]
             )
           ]),
           _vm._v(" "),
@@ -48617,7 +48627,10 @@ var render = function() {
                   }
                 }
               },
-              [_vm._v("Delete")]
+              [
+                _c("i", { staticClass: "far fa-trash-alt" }),
+                _vm._v(" Delete\n            ")
+              ]
             )
           ])
         ]
@@ -49747,7 +49760,7 @@ var render = function() {
       _vm._v(" "),
       _vm.icon == "page"
         ? _c("p", { staticClass: "empty-text" }, [
-            _vm._v("The magic area of your " + _vm._s(_vm.name))
+            _vm._v("The " + _vm._s(_vm.name))
           ])
         : _c("p", { staticClass: "empty-text" }, [_vm._v(_vm._s(_vm.name))])
     ])
@@ -49901,6 +49914,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -49918,7 +49939,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             edit: {
                 title: '',
                 id: null,
-                category_id: null,
                 oneTime: false,
                 oneTimeError: false,
                 buttonLoading: false
@@ -50016,9 +50036,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             } else {
                 this.edit.buttonLoading = true;
                 var self = this;
+                console.log(this.edit.id);
                 __WEBPACK_IMPORTED_MODULE_0_axios___default.a.patch(route('page.update', { page: this.edit.id }), {
                     title: this.edit.title
                 }).then(function (data) {
+                    console.log('success');
                     self.edit.buttonLoading = false;
                     self.$store.dispatch('setPageEditMode', false);
                     self.$store.dispatch('editPage', {
@@ -50028,6 +50050,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     self.edit.title = '';
                     self.edit.id = null;
                 }).catch(function (error) {
+                    console.log('error');
                     self.edit.buttonLoading = false;
                 });
             }
@@ -50037,17 +50060,23 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
         handleActiveEditMode: function handleActiveEditMode() {
             this.edit.title = this.selectedCardTitle;
-            this.$store.dispatch('setCategoryEditMode', true);
+            this.edit.id = this.selectedCardId;
+            this.$store.dispatch('setPageEditMode', true);
         },
         handleRemovePage: function handleRemovePage() {
             var _this2 = this;
 
             var self = this;
-            var confirmBox = confirm("Are you sure you want to delete this category '" + this.selectedCardName + "'?");
+            var confirmBox = confirm("Are you sure you want to delete this page '" + this.selectedCardTitle + "'?");
             if (confirmBox == true) {
-                this.$store.dispatch('setCategoryEditMode', false);
-                __WEBPACK_IMPORTED_MODULE_0_axios___default.a.delete(route('category.destroy', { category: this.selectedCardId })).then(function (data) {
-                    self.$store.dispatch('deleteCategory', _this2.selectedCardId);
+                this.$store.dispatch('setPageEditMode', false);
+                __WEBPACK_IMPORTED_MODULE_0_axios___default.a.delete(route('page.destroy', { page: this.selectedCardId })).then(function (data) {
+                    self.$store.dispatch('deletePage', _this2.selectedCardId);
+                    _this2.$store.dispatch('setSelectedPage', {
+                        id: undefined,
+                        title: '',
+                        markdown: ''
+                    });
                 });
             }
         },
@@ -50282,41 +50311,55 @@ var render = function() {
         )
       ]),
       _vm._v(" "),
-      _c("context-menu", { ref: "pageMenu", attrs: { id: "context-menu" } }, [
-        _c("li", [
-          _c(
-            "a",
-            {
-              staticClass: "normal",
-              attrs: { href: "#" },
-              on: {
-                click: function($event) {
-                  $event.preventDefault()
-                  return _vm.handleActiveEditMode($event)
+      _c(
+        "context-menu",
+        {
+          ref: "pageMenu",
+          staticClass: "app-context-menu",
+          attrs: { id: "context-menu" }
+        },
+        [
+          _c("li", [
+            _c(
+              "a",
+              {
+                staticClass: "normal",
+                attrs: { href: "#" },
+                on: {
+                  click: function($event) {
+                    $event.preventDefault()
+                    return _vm.handleActiveEditMode($event)
+                  }
                 }
-              }
-            },
-            [_vm._v("Edit")]
-          )
-        ]),
-        _vm._v(" "),
-        _c("li", [
-          _c(
-            "a",
-            {
-              staticClass: "danger",
-              attrs: { href: "#" },
-              on: {
-                click: function($event) {
-                  $event.preventDefault()
-                  return _vm.handleRemovePage($event)
+              },
+              [
+                _c("i", { staticClass: "fas fa-pen-square" }),
+                _vm._v(" Edit\n            ")
+              ]
+            )
+          ]),
+          _vm._v(" "),
+          _c("li", [
+            _c(
+              "a",
+              {
+                staticClass: "danger",
+                attrs: { href: "#" },
+                on: {
+                  click: function($event) {
+                    $event.preventDefault()
+                    return _vm.handleRemovePage($event)
+                  }
                 }
-              }
-            },
-            [_vm._v("Delete")]
-          )
-        ])
-      ])
+              },
+              [
+                _c("i", { staticClass: "far fa-trash-alt" }),
+                _vm._v(" Delete\n            ")
+              ]
+            )
+          ])
+        ]
+      )
     ],
     1
   )
@@ -50823,6 +50866,540 @@ if (false) {
   module.hot.accept()
   if (module.hot.data) {
     require("vue-hot-reload-api")      .rerender("data-v-3bd67792", module.exports)
+  }
+}
+
+/***/ }),
+/* 119 */,
+/* 120 */,
+/* 121 */,
+/* 122 */,
+/* 123 */,
+/* 124 */,
+/* 125 */,
+/* 126 */,
+/* 127 */,
+/* 128 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(0)
+/* script */
+var __vue_script__ = __webpack_require__(129)
+/* template */
+var __vue_template__ = __webpack_require__(360)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/javascript/components/AppPage.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-0bf67876", Component.options)
+  } else {
+    hotAPI.reload("data-v-0bf67876", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 129 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    data: function data() {
+        return {};
+    },
+
+    computed: {
+        //         pageFormVisiblity() {
+        //             return this.$store.state.pageFormVisiblity;
+        //         },
+        //         mdData: function () {
+        //             return this.pageData == '' ? this.emptyText : md.render(this.pageData);
+        //         },
+        error: function error() {
+            return this.$store.state.error.page;
+        },
+        hasPage: function hasPage() {
+            return this.$store.state.selectedCard.pages.id == undefined ? false : true;
+        },
+        page: function page() {
+            return this.$store.state.selectedCard.pages.data;
+        }
+    }
+});
+
+/***/ }),
+/* 130 */,
+/* 131 */,
+/* 132 */,
+/* 133 */,
+/* 134 */,
+/* 135 */,
+/* 136 */,
+/* 137 */,
+/* 138 */,
+/* 139 */,
+/* 140 */,
+/* 141 */,
+/* 142 */,
+/* 143 */,
+/* 144 */,
+/* 145 */,
+/* 146 */,
+/* 147 */,
+/* 148 */,
+/* 149 */,
+/* 150 */,
+/* 151 */,
+/* 152 */,
+/* 153 */,
+/* 154 */,
+/* 155 */,
+/* 156 */,
+/* 157 */,
+/* 158 */,
+/* 159 */,
+/* 160 */,
+/* 161 */,
+/* 162 */,
+/* 163 */,
+/* 164 */,
+/* 165 */,
+/* 166 */,
+/* 167 */,
+/* 168 */,
+/* 169 */,
+/* 170 */,
+/* 171 */,
+/* 172 */,
+/* 173 */,
+/* 174 */,
+/* 175 */,
+/* 176 */,
+/* 177 */,
+/* 178 */,
+/* 179 */,
+/* 180 */,
+/* 181 */,
+/* 182 */,
+/* 183 */,
+/* 184 */,
+/* 185 */,
+/* 186 */,
+/* 187 */,
+/* 188 */,
+/* 189 */,
+/* 190 */,
+/* 191 */,
+/* 192 */,
+/* 193 */,
+/* 194 */,
+/* 195 */,
+/* 196 */,
+/* 197 */,
+/* 198 */,
+/* 199 */,
+/* 200 */,
+/* 201 */,
+/* 202 */,
+/* 203 */,
+/* 204 */,
+/* 205 */,
+/* 206 */,
+/* 207 */,
+/* 208 */,
+/* 209 */,
+/* 210 */,
+/* 211 */,
+/* 212 */,
+/* 213 */,
+/* 214 */,
+/* 215 */,
+/* 216 */,
+/* 217 */,
+/* 218 */,
+/* 219 */,
+/* 220 */,
+/* 221 */,
+/* 222 */,
+/* 223 */,
+/* 224 */,
+/* 225 */,
+/* 226 */,
+/* 227 */,
+/* 228 */,
+/* 229 */,
+/* 230 */,
+/* 231 */,
+/* 232 */,
+/* 233 */,
+/* 234 */,
+/* 235 */,
+/* 236 */,
+/* 237 */,
+/* 238 */,
+/* 239 */,
+/* 240 */,
+/* 241 */,
+/* 242 */,
+/* 243 */,
+/* 244 */,
+/* 245 */,
+/* 246 */,
+/* 247 */,
+/* 248 */,
+/* 249 */,
+/* 250 */,
+/* 251 */,
+/* 252 */,
+/* 253 */,
+/* 254 */,
+/* 255 */,
+/* 256 */,
+/* 257 */,
+/* 258 */,
+/* 259 */,
+/* 260 */,
+/* 261 */,
+/* 262 */,
+/* 263 */,
+/* 264 */,
+/* 265 */,
+/* 266 */,
+/* 267 */,
+/* 268 */,
+/* 269 */,
+/* 270 */,
+/* 271 */,
+/* 272 */,
+/* 273 */,
+/* 274 */,
+/* 275 */,
+/* 276 */,
+/* 277 */,
+/* 278 */,
+/* 279 */,
+/* 280 */,
+/* 281 */,
+/* 282 */,
+/* 283 */,
+/* 284 */,
+/* 285 */,
+/* 286 */,
+/* 287 */,
+/* 288 */,
+/* 289 */,
+/* 290 */,
+/* 291 */,
+/* 292 */,
+/* 293 */,
+/* 294 */,
+/* 295 */,
+/* 296 */,
+/* 297 */,
+/* 298 */,
+/* 299 */,
+/* 300 */,
+/* 301 */,
+/* 302 */,
+/* 303 */,
+/* 304 */,
+/* 305 */,
+/* 306 */,
+/* 307 */,
+/* 308 */,
+/* 309 */,
+/* 310 */,
+/* 311 */,
+/* 312 */,
+/* 313 */,
+/* 314 */,
+/* 315 */,
+/* 316 */,
+/* 317 */,
+/* 318 */,
+/* 319 */,
+/* 320 */,
+/* 321 */,
+/* 322 */,
+/* 323 */,
+/* 324 */,
+/* 325 */,
+/* 326 */,
+/* 327 */,
+/* 328 */,
+/* 329 */,
+/* 330 */,
+/* 331 */,
+/* 332 */,
+/* 333 */,
+/* 334 */,
+/* 335 */,
+/* 336 */,
+/* 337 */,
+/* 338 */,
+/* 339 */,
+/* 340 */,
+/* 341 */,
+/* 342 */,
+/* 343 */,
+/* 344 */,
+/* 345 */,
+/* 346 */,
+/* 347 */,
+/* 348 */,
+/* 349 */,
+/* 350 */,
+/* 351 */,
+/* 352 */,
+/* 353 */,
+/* 354 */,
+/* 355 */,
+/* 356 */,
+/* 357 */,
+/* 358 */,
+/* 359 */,
+/* 360 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "app-page" }, [
+    _c("div", { staticClass: "app-page-container" }, [
+      _c("div", { directives: [{ name: "bar", rawName: "v-bar" }] }, [
+        _c(
+          "div",
+          {
+            staticClass: "app-page-contents syncscroll",
+            attrs: { id: "page-preview", name: "syncscroll" }
+          },
+          [
+            _vm.error
+              ? _c("error")
+              : _vm.hasPage
+                ? _c("app-page-content", { attrs: { page: _vm.page } })
+                : _c("empty", {
+                    staticClass: "h100",
+                    attrs: { icon: "page", name: "Page" }
+                  })
+          ],
+          1
+        )
+      ])
+    ])
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-0bf67876", module.exports)
+  }
+}
+
+/***/ }),
+/* 361 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(0)
+/* script */
+var __vue_script__ = __webpack_require__(362)
+/* template */
+var __vue_template__ = __webpack_require__(363)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/javascript/components/AppPageContent.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-21085ca4", Component.options)
+  } else {
+    hotAPI.reload("data-v-21085ca4", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 362 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+// var Remarkable = require('remarkable');
+// var hljs = require('highlight.js');
+
+// function codeDefaultLang(md) {
+//     const rule = md.renderer.rules.fence;
+//     md.renderer.rules.fence = function(tokens, idx, options, env, instance) {
+//         if(!tokens[idx].params && md.options.langDefault) {
+//             tokens[idx].params = md.options.langDefault;
+//         }
+//         return rule.call(this, tokens, idx, options, env, instance);
+//     };
+// }
+
+// var md = new Remarkable('full', {
+//     html: true,
+//     breaks: true,
+//     langPrefix: '',
+//     langDefault: 'unknown',
+//     highlight: function (str, lang) {
+//         if (lang && hljs.getLanguage(lang)) {
+//             try {
+//                 return hljs.highlight(lang, str).value;
+//             } catch (err) {}
+//         }
+//         try {
+//             return hljs.highlightAuto(str).value;
+//         } catch (err) {}
+
+//         return '';
+//     }
+// });
+
+// md.use(codeDefaultLang);
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    data: function data() {
+        return {
+            //             editMsg: 'Edit the page',
+            //             showForm: false,
+            //             empty: false,
+            //             loading: false,
+            //             error: false,
+            //             emptyText: '<p style="color: #6b6b6b"><i>Nothing here, Write something amazing.</i></p>'
+        };
+    }
+});
+
+/***/ }),
+/* 363 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _vm._m(0)
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "app-page-head" }, [
+      _c("h1", [_vm._v("Page title!")])
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-21085ca4", module.exports)
   }
 }
 

@@ -47,9 +47,17 @@
                 <empty v-else icon="pages" name="Pages" class="h100"></empty>
             </div>
         </div>
-       <context-menu id="context-menu" ref="pageMenu">
-            <li><a href="#" class="normal" @click.prevent="handleActiveEditMode">Edit</a></li>
-            <li><a href="#" class="danger" @click.prevent="handleRemovePage">Delete</a></li>
+       <context-menu id="context-menu" ref="pageMenu" class="app-context-menu">
+            <li>
+                <a href="#" class="normal" @click.prevent="handleActiveEditMode">
+                    <i class="fas fa-pen-square"></i> Edit
+                </a>
+            </li>
+            <li>
+                <a href="#" class="danger" @click.prevent="handleRemovePage">
+                    <i class="far fa-trash-alt"></i> Delete
+                </a>
+            </li>
         </context-menu>
     </div>
 </template>
@@ -71,7 +79,6 @@
                 edit: {
                     title: '',
                     id: null,
-                    category_id: null,
                     oneTime: false,
                     oneTimeError: false,
                     buttonLoading: false
@@ -167,10 +174,12 @@
                 } else {
                     this.edit.buttonLoading = true;
                     let self = this;
+                    console.log(this.edit.id);
                     axios.patch(route('page.update', { page: this.edit.id }), {
                         title: this.edit.title
                     })
                     .then(data => {
+                        console.log('success');
                         self.edit.buttonLoading = false;
                         self.$store.dispatch('setPageEditMode', false);
                         self.$store.dispatch('editPage', {
@@ -181,6 +190,7 @@
                         self.edit.id = null;
                     })
                     .catch(error => {
+                        console.log('error');
                         self.edit.buttonLoading = false;
                     });
                 }
@@ -190,16 +200,22 @@
             },
             handleActiveEditMode () {
                 this.edit.title = this.selectedCardTitle;
-                this.$store.dispatch('setCategoryEditMode', true);
+                this.edit.id = this.selectedCardId;
+                this.$store.dispatch('setPageEditMode', true);
             },
             handleRemovePage () {
                 let self = this;
-                let confirmBox = confirm("Are you sure you want to delete this category '" + this.selectedCardName +"'?");
+                let confirmBox = confirm("Are you sure you want to delete this page '" + this.selectedCardTitle +"'?");
                 if (confirmBox == true) {
-                    this.$store.dispatch('setCategoryEditMode', false);
-                    axios.delete(route('category.destroy', { category: this.selectedCardId }))
+                    this.$store.dispatch('setPageEditMode', false);
+                    axios.delete(route('page.destroy', { page: this.selectedCardId }))
                     .then(data => {
-                        self.$store.dispatch('deleteCategory', this.selectedCardId);
+                        self.$store.dispatch('deletePage', this.selectedCardId);
+                        this.$store.dispatch('setSelectedPage', {
+                            id: undefined,
+                            title: '',
+                            markdown: ''
+                        });
                     });
                 }
             },

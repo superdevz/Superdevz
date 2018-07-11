@@ -6,7 +6,8 @@ use Illuminate\Http\Request;
 use App\Http\Resources\PageCollection;
 use App\Http\Resources\Page as PageRow;
 use App\Http\Requests\StorePage;
-use App\Http\Requests\UpdatePage;
+use App\Http\Requests\UpdatePageTitle;
+use App\Http\Requests\UpdatePageMarkdown;
 use App\Http\Requests\DragPage;
 use App\Category;
 use App\Page;
@@ -61,9 +62,17 @@ class PageController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdatePage $request, Page $page)
+    public function update(UpdatePageTitle $request, Page $page)
     {
         $page->title = $request->title;
+
+        $page->save();
+
+        return new PageRow($page);
+    }
+
+    public function markdown(UpdatePageMarkdown $request, Page $page)
+    {
         $page->self = \Purifier::clean($request->markdown);
 
         $page->save();

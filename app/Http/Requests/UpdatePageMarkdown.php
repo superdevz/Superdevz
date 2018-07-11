@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdatePage extends FormRequest
+class UpdatePageMarkdown extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,7 +24,6 @@ class UpdatePage extends FormRequest
     public function rules()
     {
         return [
-            'title' => 'required|max:255',
             'markdown' => ''
         ];
     }

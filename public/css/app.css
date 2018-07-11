@@ -4559,7 +4559,7 @@ button.button-lg {
 }
 
 .app-main .app-container .app-page .app-page-container .app-page-contents {
-  height: 576px !important;
+  height: 639px !important;
 }
 
 .app-main .app-container .app-page .app-page-container .app-page-contents .app-page-contents-inner {
@@ -4754,6 +4754,12 @@ button.button-lg {
 .app-main .app-container .app-cards .app-cards-container .app-card .app-card-wrapper .app-card-circle-warpper .app-card-circle:active {
   background: #0072d9;
   color: #fff;
+}
+
+.app-main .app-container .app-context-menu .fa-plus-square,
+.app-main .app-container .app-context-menu .fa-pen-square,
+.app-main .app-container .app-context-menu .fa-trash-alt {
+  margin: 0 5px 0 0;
 }
 
 .app-main .app-auth {

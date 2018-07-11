@@ -27,6 +27,7 @@ Route::middleware(['auth:api', 'auth'])->group(function () {
         Route::patch('/pages/drag', 'PageController@drag')->name('drag');
         Route::post('/page/category/{category}', 'PageController@store')->name('store');
         Route::patch('/page/{page}', 'PageController@update')->name('update');
+        Route::patch('/page/{page}/markdown', 'PageController@markdown')->name('markdown');
         Route::delete('/page/{page}', 'PageController@destroy')->name('destroy');
     });
 });

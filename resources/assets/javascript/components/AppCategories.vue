@@ -49,10 +49,22 @@
                 <empty v-else icon="boxes" name="Categories" class="h100"></empty>
             </div>
         </div>
-        <context-menu id="context-menu" ref="categoryMenu">
-            <li><a href="#" class="normal" @click.prevent="handleAddPage">Add page</a></li>
-            <li><a href="#" class="normal" @click.prevent="handleActiveEditMode">Edit</a></li>
-            <li><a href="#" class="danger" @click.prevent="handleRemoveCategory">Delete</a></li>
+        <context-menu id="context-menu" ref="categoryMenu" class="app-context-menu">
+            <li>
+                <a href="#" class="normal" @click.prevent="handleAddPage">
+                    <i class="far fa-plus-square"></i> Add page
+                </a>
+                </li>
+            <li>
+                <a href="#" class="normal" @click.prevent="handleActiveEditMode">
+                    <i class="fas fa-pen-square"></i> Edit
+                </a>
+                </li>
+            <li>
+                <a href="#" class="danger" @click.prevent="handleRemoveCategory">
+                    <i class="far fa-trash-alt"></i> Delete
+                </a>
+            </li>
         </context-menu>
     </div>
 </template>
@@ -184,6 +196,7 @@
                 }
             },
             handleSelectCard (category) {
+                this.$store.dispatch('setPageEditMode', false);
                 this.$store.dispatch('setSelectedCategory', category);
             },
             handleActiveEditMode () {

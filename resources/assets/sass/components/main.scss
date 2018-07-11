@@ -99,7 +99,7 @@
                     }
                 }
                 .app-page-contents {
-                    height: 576px !important;
+                    height: 639px !important;
                     .app-page-contents-inner {
                         margin-right: 14px;
                     }
@@ -240,6 +240,11 @@
                         }
                     }
                 }
+            }
+        }
+        .app-context-menu {
+            .fa-plus-square, .fa-pen-square, .fa-trash-alt {
+                margin: 0 5px 0 0;
             }
         }
     }
