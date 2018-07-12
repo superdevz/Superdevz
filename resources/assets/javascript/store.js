@@ -33,7 +33,7 @@ const store = new Vuex.Store({
             pages: false,
             page: false
         },
-        pageFormVisiblity: false,
+        pageFormVisibility: false,
         formVisiblity: {
             categories: {
                 add: false,
@@ -55,6 +55,7 @@ const store = new Vuex.Store({
             pages: {
                 id: undefined,
                 data: {
+                    category_id: undefined,
                     title: '',
                     markdown: ''
                 }
@@ -84,6 +85,12 @@ const store = new Vuex.Store({
                 return false;
             }
             return true;
+        },
+        getPage: (state) => (id) => {
+            return state.pages.find(page => page.id === id);
+        },
+        getCategoryColor: (state) => (id) => {
+            return state.categories.find(category => category.id === id).color;
         }
     },
     mutations: {
@@ -227,6 +234,7 @@ const store = new Vuex.Store({
         },
         setSelectedPage (state, page) {
             state.selectedCard.pages.id = page.id;
+            state.selectedCard.pages.data.category_id = page.category_id;
             state.selectedCard.pages.data.title = page.title;
             state.selectedCard.pages.data.markdown = page.markdown;
         },
@@ -374,6 +382,13 @@ const store = new Vuex.Store({
         },
         deleteCategory({commit}, id) {
             commit('deleteCategory', id);
+            commit('setSelectedCategory', {
+                id: undefined,
+                data: {
+                    name: '',
+                    color: ''
+                }
+            });
         },
         orderCategories ({commit}, categories) {
             commit('orderCategories', categories);

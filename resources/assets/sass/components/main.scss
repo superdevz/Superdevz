@@ -79,22 +79,40 @@
                 .app-page-head {
                     display: flex;
                     align-items: center;
+                    justify-content: space-between;
                     border-bottom: 1px solid #eee;
                     margin-bottom: 15px;
                     h1 {
                         font-size: 30px;
                         margin-bottom: 10px;
+                        .app-page-circle {
+                            display: inline-block;
+                            height: 16px;
+                            width: 16px;
+                            background: #eee;
+                            border-radius: 50%;
+                            box-shadow: 0 1px 3px -1px black;
+                            margin-right: 10px;
+                            &:hover, &:active {
+                                background: #0072d9;
+                                color: #fff;
+                            }
+                        }
                     }
-                    .app-edit-button {
-                        padding: 3px 0 5px 3px;
-                        height: auto;
-                        line-height: 0;
-                    }
-                    .app-settings-buttons {
-                        margin-left: auto;
-                        margin-bottom: 10px;
-                        .app-discard-button, .app-save-button {
-                            margin-left: 5px;
+                    .app-page-buttons {
+                        margin: 2px;
+                        margin-bottom: 7px;
+                        .app-edit-button {
+                            padding: 3px 0 5px 3px;
+                            height: auto;
+                            line-height: 0;
+                        }
+                        .app-settings-buttons {
+                            margin-left: auto;
+                            margin-bottom: 10px;
+                            .app-discard-button, .app-save-button {
+                                margin-left: 5px;
+                            }
                         }
                     }
                 }

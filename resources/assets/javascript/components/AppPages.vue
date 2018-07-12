@@ -50,7 +50,7 @@
        <context-menu id="context-menu" ref="pageMenu" class="app-context-menu">
             <li>
                 <a href="#" class="normal" @click.prevent="handleActiveEditMode">
-                    <i class="fas fa-pen-square"></i> Edit
+                    <i class="fas fa-pen-square"></i> Edit title
                 </a>
             </li>
             <li>
@@ -174,12 +174,10 @@
                 } else {
                     this.edit.buttonLoading = true;
                     let self = this;
-                    console.log(this.edit.id);
                     axios.patch(route('page.update', { page: this.edit.id }), {
                         title: this.edit.title
                     })
                     .then(data => {
-                        console.log('success');
                         self.edit.buttonLoading = false;
                         self.$store.dispatch('setPageEditMode', false);
                         self.$store.dispatch('editPage', {
@@ -190,7 +188,6 @@
                         self.edit.id = null;
                     })
                     .catch(error => {
-                        console.log('error');
                         self.edit.buttonLoading = false;
                     });
                 }

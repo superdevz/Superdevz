@@ -175,7 +175,6 @@
                 this.deleteaccount.buttonLoading = true;
                 this.errors.deleteaccount.record({});
                 let self = this;
-                console.log(this.deleteaccount.accountPassword);
                 axios.delete(route('purge', {account_password: this.deleteaccount.accountPassword}))
                 .then(data => {
                     self.deleteaccount.buttonLoading = false;

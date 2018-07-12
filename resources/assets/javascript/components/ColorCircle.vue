@@ -1,5 +1,5 @@
 <template>
-    <div class="app-card-circle" :style="{ backgroundColor: color }"></div>
+    <div :class="innerClass" :style="{ backgroundColor: color }"></div>
 </template>
 
 <script>
@@ -9,6 +9,6 @@
                
             }
         },
-        props: ['color']
+        props: ['color', 'innerClass']
     }
 </script>

@@ -11,7 +11,7 @@
                 {{ cardTitle }}
             </h3>
             <div class="app-card-circle-warpper" v-if="color" @click="handleSelectCard()">
-                <color-circle :color="color"></color-circle>
+                <color-circle :color="color" innerClass="app-card-circle"></color-circle>
             </div>
         </div>
     </div>

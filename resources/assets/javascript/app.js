@@ -42,6 +42,12 @@ Vue.component('app-page-content', require('./components/AppPageContent.vue'));
 // Vue.component('passport-authorized-clients', require('./components/passport/AuthorizedClients.vue'));
 // Vue.component('passport-personal-access-tokens', require('./components/passport/PersonalAccessTokens.vue'));
 
+Vue.directive('focus', function (el, binding) {
+    if (binding.value == true) {
+        el.focus()
+    }
+});
+
 const app = new Vue({
     store,
     el: '#app',

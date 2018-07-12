@@ -20,12 +20,6 @@
             }
         },
         computed: {
-    //         pageFormVisiblity() {
-    //             return this.$store.state.pageFormVisiblity;
-    //         },
-    //         mdData: function () {
-    //             return this.pageData == '' ? this.emptyText : md.render(this.pageData);
-    //         },
             error () {
                 return this.$store.state.error.page;                
             },
@@ -33,8 +27,8 @@
                 return this.$store.state.selectedCard.pages.id == undefined ? false : true;                
             },
             page () {
-                return this.$store.state.selectedCard.pages.data;                
-            }
+                return this.$store.getters.getPage(this.$store.state.selectedCard.pages.id);
+            },
         }
     }
 </script>

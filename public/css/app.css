@@ -4533,6 +4533,9 @@ button.button-lg {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
   border-bottom: 1px solid #eee;
   margin-bottom: 15px;
 }
@@ -4542,19 +4545,41 @@ button.button-lg {
   margin-bottom: 10px;
 }
 
-.app-main .app-container .app-page .app-page-container .app-page-head .app-edit-button {
+.app-main .app-container .app-page .app-page-container .app-page-head h1 .app-page-circle {
+  display: inline-block;
+  height: 16px;
+  width: 16px;
+  background: #eee;
+  border-radius: 50%;
+  -webkit-box-shadow: 0 1px 3px -1px black;
+          box-shadow: 0 1px 3px -1px black;
+  margin-right: 10px;
+}
+
+.app-main .app-container .app-page .app-page-container .app-page-head h1 .app-page-circle:hover,
+.app-main .app-container .app-page .app-page-container .app-page-head h1 .app-page-circle:active {
+  background: #0072d9;
+  color: #fff;
+}
+
+.app-main .app-container .app-page .app-page-container .app-page-head .app-page-buttons {
+  margin: 2px;
+  margin-bottom: 7px;
+}
+
+.app-main .app-container .app-page .app-page-container .app-page-head .app-page-buttons .app-edit-button {
   padding: 3px 0 5px 3px;
   height: auto;
   line-height: 0;
 }
 
-.app-main .app-container .app-page .app-page-container .app-page-head .app-settings-buttons {
+.app-main .app-container .app-page .app-page-container .app-page-head .app-page-buttons .app-settings-buttons {
   margin-left: auto;
   margin-bottom: 10px;
 }
 
-.app-main .app-container .app-page .app-page-container .app-page-head .app-settings-buttons .app-discard-button,
-.app-main .app-container .app-page .app-page-container .app-page-head .app-settings-buttons .app-save-button {
+.app-main .app-container .app-page .app-page-container .app-page-head .app-page-buttons .app-settings-buttons .app-discard-button,
+.app-main .app-container .app-page .app-page-container .app-page-head .app-page-buttons .app-settings-buttons .app-save-button {
   margin-left: 5px;
 }
 
