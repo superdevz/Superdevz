@@ -1,6 +1,6 @@
 <template>
     <div class="app-pages" v-bind:class="[pageFormVisibility == true ? hideThisSectionClass : '']">
-        <pages-options />
+        <pages-options @addFocus="handleAddfocus" />
         <transition name="form-fade">
             <div v-if="addFormVisiblity" class="page-form">
                 <form @submit.prevent="handleAddPage">
@@ -199,6 +199,9 @@
                 this.edit.title = this.selectedCardTitle;
                 this.edit.id = this.selectedCardId;
                 this.$store.dispatch('setPageEditMode', true);
+                setTimeout(() => {
+                    document.getElementById('editPage').focus();
+                }, 100);
             },
             handleRemovePage () {
                 let self = this;
@@ -221,6 +224,11 @@
                     pages: this.pages,
                     sort: this.$store.state.sort.pages
                 });
+            },
+            handleAddfocus () {
+                setTimeout(() => {
+                    document.getElementById('addPage').focus();
+                }, 100);
             }
         }
     }

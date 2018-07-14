@@ -50,6 +50,7 @@ class LoginController extends Controller
         $this->validate($request, [
             $this->username() => 'required|email|string',
             'password' => 'required|string',
+            'remember' => 'boolean'
         ]);
     }
 

@@ -17,7 +17,4 @@ mix.setResourceRoot('http://codolog.api/')
     .scripts([
         'resources/assets/javascript/fontawesome.js'
     ], 'public/javascript/vendor.js')
-    .scripts([
-        'resources/assets/javascript/syncscroll.js'
-    ], 'public/javascript/syncscroll.js')
     .copyDirectory('resources/assets/images', 'public/images');

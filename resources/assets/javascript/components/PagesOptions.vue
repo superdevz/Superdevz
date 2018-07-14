@@ -59,6 +59,7 @@
             },
             handelShowAddForm () {
                 this.$store.dispatch('setPagesAddFormVisibility', !this.addFormVisiblity);
+                this.$emit('addFocus');
             },
             handelHideEditForm () {
                 this.$store.dispatch('setPagesEditFormVisibility', false);

@@ -70,6 +70,10 @@
                             <message :text="errors.signin.get('password')" :visible="errors.signin.has('password')"></message>
                         </div>
                         <div>
+                            <input type="checkbox" id="signin-remember" v-model="signin.remember">
+                            <label for="signin-remember">Remember me</label>
+                        </div>
+                        <div>
                             <button class="button full-button" :class="[signin.buttonLoading ? loadingClass : '']" :disabled="signin.buttonLoading" type="submit">Sign in</button>
                         </div>
                     </form>
@@ -166,6 +170,7 @@
                 signin: {
                     email: '',
                     password: '',
+                    remember: '',
                     buttonLoading: false
                 },
                 signup: {
@@ -204,16 +209,19 @@
             handleSignIn: function () {
                 this.signin.buttonLoading = true;
                 this.errors.signin.record({});
+                let remember = this.signin.remember == '' ? false : true;
                 let self = this;
                 axios.post(route('signin'), {
                     email: this.signin.email,
-                    password: this.signin.password
+                    password: this.signin.password,
+                    remember: remember
                 })
                 .then(data => {
                     self.$store.dispatch('setupProfile', data.data.later).then(() => {
                         self.signin.buttonLoading = false;
                         self.signin.email = '';
                         self.signin.password = '';
+                        self.signin.remember = false;
                     });
                 })
                 .catch(error => {

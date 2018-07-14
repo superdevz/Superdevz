@@ -36,9 +36,9 @@
                 pointer-events: auto;
             }
             .page-textarea {
-                margin-top: 56px;
-                height: 576px !important;
-                max-height: 576px;
+                margin-top: 59px;
+                height: 575px !important;
+                max-height: 575px;
                 resize: none;
                 border: none;
                 box-shadow: none;
@@ -119,6 +119,7 @@
                 .app-page-contents {
                     height: 639px !important;
                     .app-page-contents-inner {
+                        height: 575px !important;
                         margin-right: 14px;
                     }
                 }

@@ -34,9 +34,7 @@ Vue.component('pages-options', require('./components/pagesOptions.vue'));
 Vue.component('empty-pages', require('./components/EmptyPages.vue'));
 Vue.component('app-page', require('./components/AppPage.vue'));
 Vue.component('app-page-content', require('./components/AppPageContent.vue'));
-// Vue.component('page-form', require('./components/PageForm.vue'));
-// Vue.component('pages-head', require('./components/PagesHead.vue'));
-// Vue.component('error', require('./components/Error.vue'));
+Vue.component('app-page-form', require('./components/AppPageForm.vue'));
 
 // Vue.component('passport-clients', require('./components/passport/Clients.vue'));
 // Vue.component('passport-authorized-clients', require('./components/passport/AuthorizedClients.vue'));

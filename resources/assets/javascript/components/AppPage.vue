@@ -1,12 +1,10 @@
 <template>
     <div class="app-page">
         <div class="app-page-container">
-            <div v-bar>
-                <div class="app-page-contents syncscroll" id="page-preview" name="syncscroll">
-                    <error v-if="error"></error>
-                    <app-page-content v-else-if="hasPage" :page="page"></app-page-content>
-                    <empty v-else icon="page" name="Page" class="h100"></empty>
-                </div>
+            <div class="app-page-contents">
+                <error v-if="error"></error>
+                <app-page-content v-else-if="hasPage" :page="page"></app-page-content>
+                <empty v-else icon="page" name="Page" class="h100"></empty>
             </div>
         </div>
     </div>

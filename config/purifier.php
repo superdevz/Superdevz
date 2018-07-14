@@ -26,7 +26,7 @@ return [
             'HTML.Doctype'             => 'HTML 4.01 Transitional',
             'HTML.Allowed'             => 'div',
             'CSS.AllowedProperties'    => 'text-align',
-            'AutoFormat.AutoParagraph' => true,
+            'AutoFormat.AutoParagraph' => false,
             'AutoFormat.RemoveEmpty'   => true,
         ],
         'test'    => [

@@ -61,6 +61,7 @@
             },
             handelShowAddForm () {
                 this.$store.dispatch('setCategoriesAddFormVisibility', !this.addFormVisiblity);
+                this.$emit('Addfocus');
             },
             handelHideEditForm () {
                 this.$store.dispatch('setCategoriesEditFormVisibility', false);

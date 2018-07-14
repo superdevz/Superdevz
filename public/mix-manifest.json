@@ -1,6 +1,5 @@
 {
     "/javascript/app.js": "/javascript/app.js",
     "/css/app.css": "/css/app.css",
-    "/javascript/vendor.js": "/javascript/vendor.js",
-    "/javascript/syncscroll.js": "/javascript/syncscroll.js"
+    "/javascript/vendor.js": "/javascript/vendor.js"
 }

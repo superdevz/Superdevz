@@ -1,6 +1,6 @@
 <template>
     <div class="app-categories" v-bind:class="[pageFormVisibility == true ? hideThisSectionClass : '']">
-        <categories-options />
+        <categories-options @Addfocus="handleAddfocus" />
         <transition name="form-fade">
             <div v-if="addFormVisiblity" class="category-form">
                 <form @submit.prevent="handleAddCategory">
@@ -204,6 +204,9 @@
                 this.edit.color = this.selectedCardColor;
                 this.edit.id = this.selectedCardId;
                 this.$store.dispatch('setCategoryEditMode', true);
+                setTimeout(() => {
+                    document.getElementById('editCategory').focus();
+                }, 100);
             },
             handleRemoveCategory () {
                 let self = this;
@@ -224,6 +227,11 @@
             },
             handleAddPage () {
                 this.$store.dispatch('setPageAddMode', true);
+            },
+            handleAddfocus () {
+                setTimeout(() => {
+                    document.getElementById('addCategory').focus();
+                }, 100);
             }
         }
     }

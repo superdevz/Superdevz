@@ -24,7 +24,7 @@ class UpdatePageMarkdown extends FormRequest
     public function rules()
     {
         return [
-            'markdown' => ''
+            'markdown' => 'nullable'
         ];
     }
 }

@@ -34,6 +34,7 @@ const store = new Vuex.Store({
             page: false
         },
         pageFormVisibility: false,
+        pageFormTextarea: '',
         formVisiblity: {
             categories: {
                 add: false,
@@ -247,6 +248,12 @@ const store = new Vuex.Store({
             });
             state.pages.splice(position, 1);
         },
+        setPageFormVisibility (state, visibility) {
+            state.pageFormVisibility = visibility;
+        },
+        setPageFormTextarea (state, markdown) {
+            state.pageFormTextarea = markdown;
+        }
     },
     actions: {
         pageLoading ({commit}, visibility) {
@@ -309,19 +316,42 @@ const store = new Vuex.Store({
         hideAlert(context, id) {
             context.commit('removeFlash', id);
         },
+        resetSelectedCards () {
+            context.commit('removeFlash', id);
+        },
+        flushCore (context) {
+            context.dispatch('setProfile', {
+                apiToken: false,
+                name: '',
+                email: '',
+                avatarSm: '',
+                avatarMd: '',
+                joinDate: ''
+            });
+            context.commit('setCategories', []);
+            context.commit('setPages', []);
+            context.commit('setSelectedCategory', {
+                id: undefined,
+                data: {
+                    name: '',
+                    color: ''
+                }
+            });
+            context.commit('setSelectedPage', {
+                id: undefined,
+                category_id: undefined,
+                data: {
+                    title: '',
+                    markdown: ''
+                }
+            });
+            this.$ls.set('ApiToken', false);
+        },
         signout (context) {
             context.commit('pageLoading', true);
             axios.post(route('signout'))
             .then(data => {
-                context.dispatch('setProfile', {
-                    apiToken: false,
-                    name: '',
-                    email: '',
-                    avatarSm: '',
-                    avatarMd: '',
-                    joinDate: ''
-                });
-                this.$ls.set('ApiToken', false);
+                context.dispatch('flushCore');
                 context.commit('pageLoading', false);
             })
             .catch(error => {
@@ -364,8 +394,18 @@ const store = new Vuex.Store({
         setCategoriesEditFormVisibility ({commit}, visibility) {
             commit('setCategoriesEditFormVisibility', visibility);
         },
-        setSelectedCategory ({commit}, category) {
-            commit('setSelectedCategory', category);
+        setSelectedCategory (context, category) {
+            context.commit('setSelectedCategory', category);
+            if (context.state.selectedCard.pages.data.category_id != category.id) {
+                context.commit('setSelectedPage', {
+                    id: undefined,
+                    category_id: undefined,
+                    data: {
+                        title: '',
+                        markdown: ''
+                    }
+                });
+            }
         },
         setCategoryEditMode ({commit}, mode) {
             commit('setCategoryEditMode', mode);
@@ -448,6 +488,16 @@ const store = new Vuex.Store({
         setSelectedCard (context, payload) {
             if(payload.cardType == 'category') {
                 context.commit('setSelectedCategory', payload.single);
+                if (context.state.selectedCard.pages.data.category_id != payload.single.id) {
+                    context.commit('setSelectedPage', {
+                        id: undefined,
+                        category_id: undefined,
+                        data: {
+                            title: '',
+                            markdown: ''
+                        }
+                    });
+                }
             } else {
                 context.commit('setSelectedPage', payload.single);
             }
@@ -457,6 +507,12 @@ const store = new Vuex.Store({
         },
         deletePage ({commit}, id) {
             commit('deletePage', id);
+        },
+        setPageFormVisibility ({commit}, visibility) {
+            commit('setPageFormVisibility', visibility);
+        },
+        setPageFormTextarea ({commit}, markdown) {
+            commit('setPageFormTextarea', markdown);
         }
     }
 });
