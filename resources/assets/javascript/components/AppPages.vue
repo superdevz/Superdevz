@@ -193,7 +193,13 @@
                 }
             },
             handleSelectCard (page) {
-                this.$store.dispatch('setSelectedPage', page);
+                this.$router.push({ name: 'home', params: {
+                        category_path: 'category',
+                        category: page.category_id,
+                        page_path: 'page',
+                        page: page.id
+                    }
+                });
             },
             handleActiveEditMode () {
                 this.edit.title = this.selectedCardTitle;

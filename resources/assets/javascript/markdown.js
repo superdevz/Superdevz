@@ -14,6 +14,8 @@ function codeDefaultLang(md) {
 const markdown = new Remarkable('full', {
     html: true,
     breaks: true,
+    linkify: true,
+    linkTarget:   '_blank',
     langPrefix: '',
     langDefault: 'unknown',
     highlight: function (str, lang) {

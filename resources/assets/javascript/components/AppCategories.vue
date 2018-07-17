@@ -197,7 +197,11 @@
             },
             handleSelectCard (category) {
                 this.$store.dispatch('setPageEditMode', false);
-                this.$store.dispatch('setSelectedCategory', category);
+                this.$router.push({ name: 'home', params: {
+                        category_path: 'category',
+                        category: category.id
+                    }
+                });
             },
             handleActiveEditMode () {
                 this.edit.name = this.selectedCardName;

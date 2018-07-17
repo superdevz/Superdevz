@@ -75,6 +75,6 @@
             currentRoute() {
                 return this.$route.name;
             }
-        },
+        }
     }
 </script>

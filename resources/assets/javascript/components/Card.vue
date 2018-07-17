@@ -27,10 +27,21 @@
         props: [ 'cardTitle', 'color', 'single', 'cardType' ],
         methods: {
             handleSelectCard () {
-                this.$store.dispatch('setSelectedCard', {
-                    single: this.single,
-                    cardType: this.cardType
-                });
+                if(this.cardType == 'category') {
+                    this.$router.push({ name: 'home', params: {
+                            category_path: 'category',
+                            category: this.single.id
+                        }
+                    });
+                } else {
+                    this.$router.push({ name: 'home', params: {
+                            category_path: 'category',
+                            category: this.single.category_id,
+                            page_path: 'page',
+                            page: this.single.id
+                        }
+                    });
+                }
             }
         }
     }

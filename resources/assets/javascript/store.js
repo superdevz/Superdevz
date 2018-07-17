@@ -3,68 +3,12 @@ import Vuex from 'vuex';
 import _ from 'lodash';
 import router from './router';
 import axios from 'axios';
+import defaultState from './default-state.js';
 
 Vue.use(Vuex);
 
 const store = new Vuex.Store({
-    state: {
-        pageLoading: true,
-        auth: false,
-        apiToken: false,
-        sort: {
-            categories: 'desc',
-            pages: 'desc',
-        },
-        alerts: [],
-        alertCount: 0,
-        profile: {
-            name: '',
-            email: '',
-            avatarSm: '',
-            avatarMd: '',
-            joinDate: ''
-        },
-        loading: {
-            categories: false,
-            pages: false,
-        },
-        error: {
-            categories: false,
-            pages: false,
-            page: false
-        },
-        pageFormVisibility: false,
-        pageFormTextarea: '',
-        formVisiblity: {
-            categories: {
-                add: false,
-                edit: false
-            },
-            pages: {
-                add: false,
-                edit: false
-            }
-        },
-        selectedCard: {
-            categories: {
-                id: undefined,
-                data: {
-                    name: '',
-                    color: ''
-                }
-            },
-            pages: {
-                id: undefined,
-                data: {
-                    category_id: undefined,
-                    title: '',
-                    markdown: ''
-                }
-            },
-        },
-        categories: [],
-        pages: [],
-    },
+    state: defaultState,
     getters: {
         apiToken(state) {
             return 'Bearer ' + state.apiToken;
@@ -90,8 +34,11 @@ const store = new Vuex.Store({
         getPage: (state) => (id) => {
             return state.pages.find(page => page.id === id);
         },
-        getCategoryColor: (state) => (id) => {
-            return state.categories.find(category => category.id === id).color;
+        getCategory: (state) => (id) => {
+            return state.categories.find(category => category.id === id);
+        },
+        getCategoryColor: (state, getters) => (id) => {
+            return getters.getCategory(id).color;
         }
     },
     mutations: {
@@ -253,6 +200,12 @@ const store = new Vuex.Store({
         },
         setPageFormTextarea (state, markdown) {
             state.pageFormTextarea = markdown;
+        },
+        fluchState (state) {
+            const s = defaultState();
+            Object.keys(s).forEach(key => {
+                state[key] = s[key]
+            });
         }
     },
     actions: {
@@ -319,32 +272,8 @@ const store = new Vuex.Store({
         resetSelectedCards () {
             context.commit('removeFlash', id);
         },
-        flushCore (context) {
-            context.dispatch('setProfile', {
-                apiToken: false,
-                name: '',
-                email: '',
-                avatarSm: '',
-                avatarMd: '',
-                joinDate: ''
-            });
-            context.commit('setCategories', []);
-            context.commit('setPages', []);
-            context.commit('setSelectedCategory', {
-                id: undefined,
-                data: {
-                    name: '',
-                    color: ''
-                }
-            });
-            context.commit('setSelectedPage', {
-                id: undefined,
-                category_id: undefined,
-                data: {
-                    title: '',
-                    markdown: ''
-                }
-            });
+        flushCore ({commit}) {
+            commit('fluchState');
             this.$ls.set('ApiToken', false);
         },
         signout (context) {
@@ -359,34 +288,52 @@ const store = new Vuex.Store({
             });
         },
         fetchCategories (context) {
-            context.commit('categoriesLoading', true);
-            axios.get(route('category.all'))
-            .then(data => {
-                context.commit('setCategories', data.data.data)
-                context.commit('categoriesLoading', false);
-            })
-            .catch(error => {
-                if (!error.status) {
-                    context.commit('categoriesError', true);
-                }
+            return new Promise((resolve, reject) => {
+                context.commit('categoriesLoading', true);
+                axios.get(route('category.all'))
+                .then(data => {
+                    context.commit('setCategories', data.data.data)
+                    resolve();
+                    context.commit('categoriesLoading', false);
+                })
+                .catch(error => {
+                    if (!error.status) {
+                        context.commit('categoriesError', true);
+                    }
+                });
             });
         },
         fetchPages (context) {
-            context.commit('pagesLoading', true);
-            axios.get(route('page.all'))
-            .then(data => {
-                context.commit('setPages', data.data.data);
-                context.commit('pagesLoading', false);
-            })
-            .catch(error => {
-                if (!error.status) {
-                    context.commit('pagesError', true);
-                }
+            return new Promise((resolve, reject) => {
+                context.commit('pagesLoading', true);
+                axios.get(route('page.all'))
+                .then(data => {
+                    context.commit('setPages', data.data.data);
+                    resolve();
+                    context.commit('pagesLoading', false);
+                })
+                .catch(error => {
+                    if (!error.status) {
+                        context.commit('pagesError', true);
+                    }
+                });
             });
         },
         fetchCore (context) {
-            context.dispatch('fetchCategories');
-            context.dispatch('fetchPages');
+            Promise.all([
+                context.dispatch('fetchCategories'),
+                context.dispatch('fetchPages')
+            ]).then(() => {
+                if (router.currentRoute.name == 'home') {
+                    let params = router.currentRoute.params;
+                    if(params.page != undefined && params.category != undefined) {
+                        context.dispatch('setSelectedCategory', context.getters.getCategory(parseInt(params.category)));
+                        context.dispatch('setSelectedPage', context.getters.getPage(parseInt(params.page)));
+                    } else if(params.category != undefined) {
+                        context.dispatch('setSelectedCategory', context.getters.getCategory(parseInt(params.category)));
+                    }
+                }
+            });
         },
         setCategoriesAddFormVisibility ({commit}, visibility) {
             commit('setCategoriesAddFormVisibility', visibility);
@@ -485,23 +432,23 @@ const store = new Vuex.Store({
         setSelectedPage ({commit}, page) {
             commit('setSelectedPage', page);
         },
-        setSelectedCard (context, payload) {
-            if(payload.cardType == 'category') {
-                context.commit('setSelectedCategory', payload.single);
-                if (context.state.selectedCard.pages.data.category_id != payload.single.id) {
-                    context.commit('setSelectedPage', {
-                        id: undefined,
-                        category_id: undefined,
-                        data: {
-                            title: '',
-                            markdown: ''
-                        }
-                    });
-                }
-            } else {
-                context.commit('setSelectedPage', payload.single);
-            }
-        },
+        // setSelectedCard (context, payload) {
+        //     if(payload.cardType == 'category') {
+        //         context.commit('setSelectedCategory', payload.single);
+        //         if (context.state.selectedCard.pages.data.category_id != payload.single.id) {
+        //             context.commit('setSelectedPage', {
+        //                 id: undefined,
+        //                 category_id: undefined,
+        //                 data: {
+        //                     title: '',
+        //                     markdown: ''
+        //                 }
+        //             });
+        //         }
+        //     } else {
+        //         context.commit('setSelectedPage', payload.single);
+        //     }
+        // },
         setPageAddMode ({commit}, mode) {
             commit('setPageAddMode', mode);
         },

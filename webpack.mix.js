@@ -11,7 +11,7 @@ let mix = require('laravel-mix');
  |
  */
 
-mix.setResourceRoot('http://codolog.api/')
+mix.setResourceRoot('http://codolog.beta/')
     .js('resources/assets/javascript/app.js', 'public/javascript')
     .sass('resources/assets/sass/app.scss', 'public/css')
     .scripts([

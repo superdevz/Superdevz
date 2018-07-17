@@ -82,15 +82,30 @@
             },
             selectedCardId () {
                 return this.$store.state.selectedCard.pages.id;
-            },
+            }
+        },
+        watch: {
+            pageFormTextarea (val) {
+                if(this.pageFormVisibility == true) {
+                    if (val.trim() === this.page.markdown.trim()) {
+                        this.removeBeforeClose();
+                    } else {
+                        this.addBeforeClose();
+                    }
+                }
+            }
         },
         methods: {
             handleEditPage () {
                 this.$store.dispatch('setPageFormTextarea', this.page.markdown);
                 this.$store.dispatch('setPageFormVisibility', true);
+                setTimeout(() => {
+                    document.getElementById('page-textarea').focus();
+                }, 100);
             },
             handleEditDiscard () {
                 this.$store.dispatch('setPageFormVisibility', false);
+                this.removeBeforeClose();
                 setTimeout(() => {
                     this.$store.dispatch('setPageFormTextarea', '');
                 }, 100);
@@ -108,13 +123,25 @@
                         id: selectedCardId,
                         page: data.data.data
                     });
-                    this.$store.dispatch('setPageFormTextarea', '');
-                    this.$store.dispatch('setPageFormVisibility', false);
+                    self.$store.dispatch('setPageFormTextarea', '');
+                    self.$store.dispatch('setPageFormVisibility', false);
+                    self.removeBeforeClose();
                 })
                 .catch(error => {
                     self.saveButtonLoading = false;
                 });
+            },
+            addBeforeClose () {
+                window.addEventListener('beforeunload', this.beforeClose);
+            },
+            removeBeforeClose () {
+                window.removeEventListener('beforeunload', this.beforeClose);
+            },
+            beforeClose (e) {
+                var confirmationMessage = 'If you leave before saving, your changes will be lost.';
+                (e || window.event).returnValue = confirmationMessage; //Gecko + IE
+                return confirmationMessage; //Gecko + Webkit, Safari, Chrome etc.
             }
-        },
+        }
     }
 </script>

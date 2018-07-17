@@ -22,17 +22,15 @@ if (scrfToken) {
 Vue.component('navbar-dropdown', require('./components/NavbarDropdown.vue'));
 Vue.component('message', require('./components/Message.vue'));
 Vue.component('flash', require('./components/Flash.vue'));
-Vue.component('app-categories', require('./components/AppCategories.vue'));
+Vue.component('main-view', require('./components/MainView.vue'));
 Vue.component('categories-options', require('./components/CategoriesOptions.vue'));
 Vue.component('error', require('./components/Error.vue'));
 Vue.component('card', require('./components/Card.vue'));
 Vue.component('color-circle', require('./components/ColorCircle.vue'));
 Vue.component('empty', require('./components/Empty.vue'));
 Vue.component('v-popover', VPopover);
-Vue.component('app-pages', require('./components/AppPages.vue'));
 Vue.component('pages-options', require('./components/pagesOptions.vue'));
 Vue.component('empty-pages', require('./components/EmptyPages.vue'));
-Vue.component('app-page', require('./components/AppPage.vue'));
 Vue.component('app-page-content', require('./components/AppPageContent.vue'));
 Vue.component('app-page-form', require('./components/AppPageForm.vue'));
 

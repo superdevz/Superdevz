@@ -19,10 +19,21 @@ const routes = [
             withoutAuth: true
         }
     },
-    { path: '/home', component: require('./components/AppContainer.vue'), name: 'home',
+    { path: '/home', component: require('./components/AppContainer.vue'),
         meta: {
             requiresAuth: true
-        }
+        },
+        children: [
+            {
+                path: '/home/:category_path?/:category?/:page_path?/:page?/:preview?',
+                name: 'home',
+                components: {
+                    page: require('./components/AppPage.vue'),
+                    pages: require('./components/AppPages.vue'),
+                    categories: require('./components/AppCategories.vue')   
+                }
+            }
+        ]
     },
     { path: '/profile', component: require('./components/AppProfile.vue'), name: 'profile',
         meta: {
@@ -39,21 +50,19 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
     if (to.matched.some(record => record.meta.requiresAuth)) {
         if (store.state.auth == false) {
-            return next({
+            next({
                 path: '/auth'
             });
         }
-        return next();
     }
     if (to.matched.some(record => record.meta.withoutAuth)) {
         if (store.state.auth == true) {
-            return next({
+            next({
                 path: '/home'
             });
         }
-        return next();
     }
-    return next();
+    next();
 });
 
 export default router;
