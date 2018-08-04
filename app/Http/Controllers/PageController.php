@@ -73,7 +73,7 @@ class PageController extends Controller
 
     public function markdown(UpdatePageMarkdown $request, Page $page)
     {
-        $page->self = \Purifier::clean($request->markdown);
+        $page->self = \Purifier::clean(htmlspecialchars($request->markdown));
 
         $page->save();
 

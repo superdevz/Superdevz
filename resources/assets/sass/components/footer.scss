@@ -1,10 +1,11 @@
 .app-footer {
-    flex: 0 1 35px;
+    flex: 0 1 25px;
     .app-footer-inner {
         display: flex;
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
+        padding: 3px 0;
     }
     p {
         margin: 0;

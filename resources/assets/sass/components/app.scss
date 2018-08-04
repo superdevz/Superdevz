@@ -1,6 +1,15 @@
 html, body {
     height: 100%;
 }
+p {
+    margin-bottom: 0.5rem;
+}
+pre {
+    margin-bottom: 1rem;
+}
+.gray-bg {
+    background: #f7f7f7;
+}
 .h100 {
     height: 100%;
 }
@@ -24,6 +33,7 @@ html, body {
     transition: all .1s;
     background-color: #ecf6ff;
     color: #0073d9;
+    border: 1px solid #0073d9;
     &:focus {
         outline: none;
         box-shadow: 0 0 0 2px rgba(0,116,217,.5);
@@ -39,6 +49,7 @@ html, body {
 .danger {
     background-color: #ffedec;
     color: #ff4136;
+    border: 1px solid #ff4136;
     &:focus {
         box-shadow: 0 0 0 2px rgba(255,65,54,.5);
     }
@@ -217,8 +228,7 @@ html, body {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    border: 1px dashed #0073d9;
-    background: #ecf6ff;
+    border-radius: 0.2em;
     .empty-inner {
         margin: 0 auto;
         text-align: center;
@@ -226,16 +236,30 @@ html, body {
             line-height: 2;
             width: 100px;
             margin: auto;
-            margin-bottom: 25px;
+            margin-bottom: 8px;
         }
         .empty-text {
-            font-size: 15px;
+            color: #fff;
+            font-size: 17px;
             text-transform: uppercase;
+            text-shadow: 0 1px 1px rgba(0, 0, 0, 0.7);
         }
         p {
             margin: 0;
         }
-    }   
+    }
+    &.app-empty-page {
+        background-image: linear-gradient( 135deg, #72EDF2 10%, #5151E5 100%);
+    }
+    &.app-empty-pages {
+        background-image: linear-gradient( 135deg, #F761A1 10%, #8C1BAB 100%);
+    }
+    &.app-empty-categories {
+        background-image: linear-gradient( 135deg, #FEB692 10%, #EA5455 100%);
+    }
+    &.app-no-pages {
+        background-image: linear-gradient( 135deg, #FF9D6C 10%, #BB4E75 100%);
+    }
 }
 .page-loader-enter-active, .page-loader-leave-active {
     transition: all .3s;

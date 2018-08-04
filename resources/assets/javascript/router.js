@@ -25,7 +25,7 @@ const routes = [
         },
         children: [
             {
-                path: '/home/:category_path?/:category?/:page_path?/:page?/:preview?',
+                path: '/home/:category_path?/:category?/:page_path?/:page?',
                 name: 'home',
                 components: {
                     page: require('./components/AppPage.vue'),

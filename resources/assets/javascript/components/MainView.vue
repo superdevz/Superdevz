@@ -1,5 +1,5 @@
 <template>
-    <div class="app-container">
+    <div class="app-container h100">
         <app-page-form></app-page-form>
         <router-view name="page"></router-view>
         <router-view name="pages"></router-view>

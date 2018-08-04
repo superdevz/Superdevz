@@ -1,7 +1,7 @@
 <template>
-    <div>
+    <div class="h100">
         <div class="app-page-head">
-            <h1><color-circle v-if="color" :color="color" innerClass="app-page-circle"></color-circle>{{ page.title }}</h1>
+            <h1><color-circle v-if="color" :color="color" innerClass="app-page-circle"></color-circle><span class="app-inner-title" :data-text="page.title" tabindex="0" :class="[ pageFormVisibility ? smallTitleClass : '' ]">{{ page.title }}</span></h1>
             <div class="app-page-buttons" v-if="pageFormVisibility">
                 <button class="app-discard-button danger button" @click="handleEditDiscard">
                     <span class="fa-layers fa-fw">
@@ -22,8 +22,12 @@
                 </button>
             </div>
         </div>
-        <div v-bar>
-            <div class="app-page-contents-inner syncscroll" name="syncscroll" id="page-preview" v-html="pageMarkdown"></div>
+        <div class="app-relative" id="app-page-contents">
+            <div class="app-fixed">
+                <div v-bar>
+                    <div class="app-page-contents-inner syncscroll" name="syncscroll" id="page-preview" v-html="pageMarkdown"></div>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -38,6 +42,7 @@
                 emptyText: '<p style="color: #6b6b6b"><i>Nothing here, Write something amazing ツ</i></p>',
                 saveButtonLoading: false,
                 loadingClass: 'button-loader',
+                smallTitleClass: 'smaller-title'
             }
         },
         mounted () {
@@ -61,6 +66,12 @@
                 }
                 isSyncingRightScroll = false;
             }
+
+            let self = this;
+            this.setContentHeight();
+            window.onresize = function(event) {
+                self.setContentHeight();
+            };
         },
         props: [ 'page' ],
         computed: {
@@ -141,6 +152,14 @@
                 var confirmationMessage = 'If you leave before saving, your changes will be lost.';
                 (e || window.event).returnValue = confirmationMessage; //Gecko + IE
                 return confirmationMessage; //Gecko + Webkit, Safari, Chrome etc.
+            },
+            setContentHeight() {
+                var height = window.innerHeight ||
+                            document.documentElement.clientHeight ||
+                            document.body.clientHeight;
+                height = height - 177;
+                document.getElementById('app-page-contents').style.height = height + 'px';
+                document.getElementById('page-preview').style.height = height + 'px';
             }
         }
     }

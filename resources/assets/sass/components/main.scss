@@ -19,18 +19,29 @@
         display: flex;
         flex-flow: row;
         align-items: flex-start;
+        .app-relative {
+            position: relative;
+        }
+        .app-fixed {
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            z-index: 99999;
+        }
         .app-page-form {
             border-right: 1px solid #eee;
             height: 609px !important;
             pointer-events: none;
-            flex: 0;
+            flex-basis: 0;
             width: 0;
             opacity: 0;
             padding-left: 0;
             padding-right: 0;
-            transition: flex 300ms, width 300ms, opacity 300ms, padding-left 300ms, padding-right 300ms;
+            transition: flex-basis 300ms, width 300ms, opacity 300ms, padding-left 300ms, padding-right 300ms;
             &.slide-show {
-                flex: 2;
+                flex-basis: 50%;
                 padding: 1rem;
                 opacity: 1;
                 pointer-events: auto;
@@ -45,13 +56,13 @@
             }
         }
         .app-categories {
-            flex: 1;
+            flex-basis: 25%;
             padding: 1rem;
             border-left: 1px solid #eee;
-            transition: flex 300ms, width 300ms, opacity 300ms, padding-left 300ms, padding-right 300ms;
+            transition: flex-basis 300ms, width 300ms, opacity 300ms, padding-left 300ms, padding-right 300ms;
             &.slide-hide {
                 pointer-events: none;
-                flex: 0;
+                flex-basis: 0;
                 width: 0;
                 opacity: 0;
                 padding-left: 0;
@@ -59,10 +70,10 @@
             }
         }
         .app-pages {
-            flex: 1;
+            flex-basis: 25%;
             padding: 1rem;
             border-left: 1px solid #eee;
-            transition: flex 300ms, width 300ms, opacity 300ms, padding-left 300ms, padding-right 300ms;
+            transition: flex-basis 300ms, width 300ms, opacity 300ms, padding-left 300ms, padding-right 300ms;
             &.slide-hide {
                 pointer-events: none;
                 flex: 0;
@@ -73,7 +84,7 @@
             }
         }
         .app-page {
-            flex: 2;
+            flex-basis: 50%;
             padding: 1rem;
             .app-page-container {
                 .app-page-head {
@@ -83,8 +94,44 @@
                     border-bottom: 1px solid #eee;
                     margin-bottom: 15px;
                     h1 {
-                        font-size: 30px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                        font-size: 24px;
                         margin-bottom: 10px;
+                        .app-inner-title {
+                            display: inline-block;
+                            white-space: nowrap;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            max-width: 500px;
+                            &.smaller-title {
+                                max-width: 410px;
+                            }
+                            &:focus, &:hover {
+                                color:transparent;
+                            }
+                            &:focus:after,&:hover:after {
+                                content: attr(data-text);
+                                overflow: visible;
+                                text-overflow: inherit;
+                                background: #fff;
+                                position: absolute;
+                                left: auto;
+                                top: auto;
+                                z-index: 99999999;
+                                width: auto;
+                                padding: 10px;
+                                max-width: 33rem;
+                                white-space: normal;
+                                word-wrap: break-word;
+                                display: block;
+                                color: black;
+                                margin-top: -2.2rem;
+                                margin-left: -0.67rem;
+                                box-shadow: 0 1px 3px 0px rgba(0, 0, 0, 0.25);
+                            }
+                        }
                         .app-page-circle {
                             display: inline-block;
                             height: 16px;
@@ -119,8 +166,14 @@
                 .app-page-contents {
                     height: 639px !important;
                     .app-page-contents-inner {
-                        height: 575px !important;
+                        height: 100%;
                         margin-right: 14px;
+                        // p {
+                            font-family: 'Quando';
+                        // }
+                        // h1, h2, h3, h4, h5, h6 {
+                        //     font-family: 'Varela Round';                            
+                        // }
                     }
                 }
             }
@@ -129,8 +182,11 @@
             display: flex;
             align-items: center;
             margin-bottom: 10px;
+            .v-popover {
+                margin-left: auto;
+            }
             .app-heading {
-                font-size: 10px;
+                font-size: 15px;
                 margin: 0 5px 0 0;
                 text-transform: uppercase;
             }
@@ -139,8 +195,15 @@
                 margin: 0 5px 0 0;
                 height: auto;
                 line-height: 0;
-                .fa-info {
-                    font-size: 12px;
+                &.app-info-category {
+                    .fa-info {
+                        font-size: 12px;
+                    }
+                }
+                &.app-info-page {
+                    .fa-info {
+                        font-size: 12px;
+                    }
                 }
             }
             .app-filter-button {
@@ -151,7 +214,7 @@
             }
             .app-add-button {
                 padding: 2px 0;
-                margin: 0 5px 0 0;
+                // margin: 0 5px 0 0;
                 height: auto;
                 line-height: 0;
             }
@@ -169,7 +232,6 @@
                 border-radius: 0;
             }
             .page-input {
-                border-radius: 0.2em;
                 border-top-right-radius: 0;
                 border-bottom-right-radius: 0;
             }
@@ -185,7 +247,6 @@
             }
         }
         .app-cards {
-            height: 605px !important;
             overflow-x: auto;
             transition: height .3s;
             &.less-height {
@@ -201,7 +262,7 @@
                     user-select: none;
                     transition: all .1s;
                     cursor: pointer;
-                    height: 40px;
+                    min-height: 40px;
                     &.selected {
                         background: #0072d9;
                         color: #fff;
@@ -229,21 +290,21 @@
                         display: flex;
                         flex-direction: row;
                         align-items: center;
+                        align-items: flex-start;
                         width: 100%;
-                        height: 100%;
+                        min-height: 40px;
                         & > h3 {
                             font-size: 16px;
                             margin: 0;
                             flex-grow: 1;
-                            padding: 11px;
-                            height: 100%;
+                            padding: 12px;
                             &:hover, &:active {
                                 background: #0072d9;
                                 color: #fff;
                             }
                         }
                         .app-card-circle-warpper {
-                            height: 100%;
+                            min-height: 40px;
                             .app-card-circle {
                                 height: 16px;
                                 width: 16px;
@@ -304,8 +365,8 @@
             margin: auto;
             padding: 20px;
             max-width: 1100px;
-            background: rgba(255, 255, 255, 0.7);
-            box-shadow: inset 0 0px 1px rgba(0, 0, 0, 0.9);
+            background: #fff;
+            box-shadow: 0 16px 32px #0000001f, 0 -2px 0px #2c9dff;
             .app-auth-intro {
                 width: 65%;
                 padding-right: 20px;
@@ -320,11 +381,11 @@
                 .intro-boxes {
                     display: flex;
                     .intro-box {
-                        padding: 10px;
+                        flex-basis: 33.333%;
+                        padding: 20px 10px 25px 10px;
                         margin: 5px;
                         background: #fff;
-                        box-shadow: inset 0 0px 1px rgba(0, 0, 0, 0.25);
-                        max-width: 218px;
+                        border: 1px solid rgb(238, 238, 238);
                         .intro-icon {
                             text-align: center;
                             img {
@@ -337,11 +398,16 @@
                             text-align: center;
                         }
                     }
+                    &.intro-bottom {
+                        .intro-box {
+                            padding: 20px 10px 30px 10px;
+                        }
+                    }
                 }
             }
             .app-auth-form {
                 width: 35%;
-                padding-left: 20px;
+                padding: 15px 6px 15px 25px;
                 h2 {
                     text-align: center;
                     margin-bottom: 20px;
@@ -367,18 +433,14 @@
             background: #ecf6ff;
             border-radius: 0.2em;
             box-shadow: 0 2px 5px #a4d4ff;
-            max-width: 25%;
+            flex-basis: 25%;
             h1 {
                 font-size: 25px;
                 margin-bottom: 15px;
             }
             .avatar-wrapper {
-                width: 321px;
-                height: 321px;
                 margin-bottom: 15px;
                 img {
-                    width: 321px;
-                    height: 321px;
                 }
             }
             p {
@@ -393,7 +455,7 @@
             padding: 15px;
             margin-top: 30px;
             border-radius: 0.2em;
-            width: 75%;
+            flex-basis: 75%;
             & > div {
                 width: 100%;
                 padding: 15px;

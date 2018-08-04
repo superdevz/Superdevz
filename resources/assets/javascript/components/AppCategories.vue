@@ -1,52 +1,56 @@
 <template>
-    <div class="app-categories" v-bind:class="[pageFormVisibility == true ? hideThisSectionClass : '']">
+    <div class="app-categories h100" v-bind:class="[pageFormVisibility == true ? hideThisSectionClass : '']">
         <categories-options @Addfocus="handleAddfocus" />
         <transition name="form-fade">
             <div v-if="addFormVisiblity" class="category-form">
-                <form @submit.prevent="handleAddCategory">
+                <form autocomplete="off" @submit.prevent="handleAddCategory">
                     <div class="input-group">
                         <swatches v-model="add.color" :colors='colors' v-tooltip.top-center="colorMsg" />
-                        <input type="text" class="input category-input" id="addCategory" v-model="add.name" placeholder="Category name">
+                        <input type="text" class="input category-input" id="addCategory" v-model="add.name" placeholder="Category name" @keyup.esc="handelHideAddForm">
                         <button type="submit" class="button" :class="[add.buttonLoading ? loadingClass : '']" :disabled="add.buttonLoading">Add</button>
                     </div>
                 </form>
             </div>
             <div v-if="editFormVisiblity" class="category-form">
-                <form @submit.prevent="handleEditCategory">
+                <form autocomplete="off" @submit.prevent="handleEditCategory">
                     <div class="input-group">
                         <swatches v-model="edit.color" :colors='colors' v-tooltip.top-center="colorMsg" />
-                        <input type="text" class="input category-input" id="editCategory" v-model="edit.name" placeholder="Category name">
+                        <input type="text" class="input category-input" id="editCategory" v-model="edit.name" placeholder="Category name" @keyup.esc="handelHideEditForm">
                         <button type="submit" class="button" :class="[edit.buttonLoading ? loadingClass : '']" :disabled="edit.buttonLoading">Edit</button>
                     </div>
                 </form>
             </div>
         </transition>
-        <div v-bar>
-            <div class="app-cards" :class="[addFormVisiblity ? lessHeightClass : '', editFormVisiblity ? lessHeightClass : '']">
-                <error v-if="error"></error>
-                <div v-else-if="loading" class="loader-bg h100"></div>
-                <div class="app-cards-container" v-else-if="categories.length > 0">
-                    <draggable
-                        v-model="categories"
-                        :options="{ group: 'categories', animation: 100, handle: '.drag-handle' }"
-                        @change="handelCategoriesSorting"
-                    >
-                        <transition-group name="list" tag="div">
-                            <card
-                                v-for="category in categories"
-                                :key="category.id"
-                                :card-title="category.self"
-                                :color="category.color"
-                                :single="category"
-                                cardType="category"
-                                v-bind:class="[selectedCardId == category.id ? selectedCardClass : '']"
-                                @click.right.native="handleSelectCard(category)"
-                                @contextmenu.prevent.native="$refs.categoryMenu.open"
-                            />
-                        </transition-group>
-                    </draggable>
+        <div class="app-relative" id="app-categories-cards">
+            <div class="app-fixed">
+                <div v-bar>
+                    <div class="app-cards" :class="[addFormVisiblity ? lessHeightClass : '', editFormVisiblity ? lessHeightClass : '']">
+                        <error v-if="error"></error>
+                        <div v-else-if="loading" class="loader-bg h100"></div>
+                        <div class="app-cards-container" id="app-categories-container" v-else-if="categories.length > 0">
+                            <draggable
+                                v-model="categories"
+                                :options="{ group: 'categories', animation: 100, handle: '.drag-handle' }"
+                                @change="handelCategoriesSorting"
+                            >
+                                <transition-group name="list" tag="div">
+                                    <card
+                                        v-for="category in categories"
+                                        :key="category.id"
+                                        :card-title="category.self"
+                                        :color="category.color"
+                                        :single="category"
+                                        cardType="category"
+                                        v-bind:class="[selectedCardId == category.id ? selectedCardClass : '']"
+                                        @click.right.native="handleSelectCard(category)"
+                                        @contextmenu.prevent.native="$refs.categoryMenu.open"
+                                    />
+                                </transition-group>
+                            </draggable>
+                        </div>
+                        <empty v-else icon="boxes" name="Categories" class="app-empty-categories h100"></empty>
+                    </div>
                 </div>
-                <empty v-else icon="boxes" name="Categories" class="h100"></empty>
             </div>
         </div>
         <context-menu id="context-menu" ref="categoryMenu" class="app-context-menu">
@@ -100,6 +104,13 @@
                 selectedCardClass: 'selected',
                 hideThisSectionClass: 'slide-hide'
             }
+        },
+        mounted() {
+            let self = this;
+            this.setContentHeight();
+            window.onresize = function(event) {
+                self.setContentHeight();
+            };
         },
         computed: {
             addFormVisiblity () {
@@ -236,6 +247,23 @@
                 setTimeout(() => {
                     document.getElementById('addCategory').focus();
                 }, 100);
+            },
+            handelHideAddForm () {
+                this.$store.dispatch('setCategoriesAddFormVisibility', false);
+            },
+            handelHideEditForm () {
+                this.$store.dispatch('setCategoriesEditFormVisibility', false);
+            },
+            setContentHeight () {
+                var height = window.innerHeight ||
+                            document.documentElement.clientHeight ||
+                            document.body.clientHeight;
+                height = height - 147;
+                setTimeout(() => {
+                    document.getElementById('app-categories-cards').style.height = height + 'px';
+                    document.getElementById('app-categories-container').style.height = height + 'px';
+                }, 500);
+                console.log(height);
             }
         }
     }

@@ -19,7 +19,7 @@ class Page extends JsonResource
             'category_id' => $this->category_id,
             'order' => $this->order,
             'title' => $this->title,
-            'markdown' => $this->self == null ? '' : $this->self
+            'markdown' => $this->self == null ? '' : htmlspecialchars_decode($this->self)
         ];
     }
 }

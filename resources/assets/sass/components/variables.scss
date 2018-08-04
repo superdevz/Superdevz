@@ -4,9 +4,9 @@
     *************************************************************************************************/
   
     /* Fonts */
-    --font-sans-serif: 'Nanum Gothic', sans-serif;
-    --font-serif: 'Nanum Gothic', serif;
-    --font-system: 'Nanum Gothic', system-ui;
+    --font-sans-serif: 'Varela Round', sans-serif;
+    --font-serif: 'Varela Round', serif;
+    --font-system: 'Varela Round', system-ui;
     --font-monospace: Menlo, Consolas, "DejaVu Sans Mono", monospace;
   
     /* Colors (most courtesy of http://clrs.cc/) */
@@ -41,7 +41,7 @@
     /* Components */
     --component-bg-color: #f2f2f2;
     --component-border-color: #ddd;
-    --component-border-radius: .25rem;
+    --component-border-radius: .1em;
     --component-border-width: 1px;
     --component-focus-width: 2px;
     --component-padding-x: 1rem;
@@ -221,7 +221,7 @@
     --headings-font-family: var(--font-system);
     --headings-font-weight: var(--font-weight-light);
     --headings-line-height: 1.1;
-    --headings-margin-bottom: 1.2rem;
+    --headings-margin-bottom: 1rem;
     --headings-color: inherit;
     --headings-font-size-h1: 2.5rem;
     --headings-font-size-h2: 2rem;

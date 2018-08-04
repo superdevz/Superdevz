@@ -1,8 +1,8 @@
 <template>
     <div class="app-section-head">
         <h2 class="app-heading">Categories</h2>
-        <v-popover offset="16">
-            <button type="button" class="app-info-button button" v-tooltip.top-center="infoMsg">
+        <v-popover offset="3">
+            <button type="button" class="app-info-button app-info-page button" v-tooltip.top-center="infoMsg">
                 <span class="fa-layers fa-fw">
                     <i class="fas fa-info"></i>
                 </span>
@@ -29,7 +29,7 @@
         </button>
         <button class="app-add-button button" v-if="!editFormVisiblity" v-tooltip.top-center="createMsg" @click="handelShowAddForm" :class="[addFormVisiblity ? activeClass : '']">
             <span class="fa-layers fa-fw">
-                <i class="far fa-plus-square"></i>
+                <i class="fas fa-plus"></i>
             </span>
         </button>
         <button class="app-exit-button button danger" v-if="editFormVisiblity" v-tooltip.top-center="exitMsg" @click="handelHideEditForm">

@@ -126,6 +126,7 @@
 }
 .v-popover {
 	.trigger {
+		display: flex !important;
 		outline: none;
 	}
 }

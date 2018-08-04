@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="h100">
         <main-view></main-view>
     </div>
 </template>

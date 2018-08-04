@@ -1,53 +1,57 @@
 <template>
-    <div class="app-pages" v-bind:class="[pageFormVisibility == true ? hideThisSectionClass : '']">
+    <div class="app-pages h100" v-bind:class="[pageFormVisibility == true ? hideThisSectionClass : '']">
         <pages-options @addFocus="handleAddfocus" />
         <transition name="form-fade">
             <div v-if="addFormVisiblity" class="page-form">
-                <form @submit.prevent="handleAddPage">
+                <form autocomplete="off" @submit.prevent="handleAddPage">
                     <div class="input-group">
-                        <input type="text" class="input page-input" id="addPage" v-model="add.title" placeholder="Page title">
+                        <input type="text" class="input page-input" id="addPage" v-model="add.title" placeholder="Page title" @keyup.esc="handelHideAddForm">
                         <button type="submit" class="button" :class="[add.buttonLoading ? loadingClass : '']" :disabled="add.buttonLoading">Add</button>
                     </div>
                 </form>
             </div>
             <div v-if="editFormVisiblity" class="page-form">
-                <form @submit.prevent="handleEditPage">
+                <form autocomplete="off" @submit.prevent="handleEditPage">
                     <div class="input-group">
-                        <input type="text" class="input page-input" id="editPage" v-model="edit.title" placeholder="Page title">
+                        <input type="text" class="input page-input" id="editPage" v-model="edit.title" placeholder="Page title" @keyup.esc="handelHideEditForm">
                         <button type="submit" class="button" :class="[edit.buttonLoading ? loadingClass : '']" :disabled="edit.buttonLoading">Edit</button>
                     </div>
                 </form>
             </div>
         </transition>
-        <div v-bar>
-            <div class="app-cards" :class="[addFormVisiblity ? lessHeightClass : '', editFormVisiblity ? lessHeightClass : '']">
-                <error v-if="error"></error>
-                <div v-else-if="loading" class="loader-bg h100"></div>
-                <div class="app-cards-container" v-else-if="pages.length > 0">
-                    <draggable
-                        v-model="pages"
-                        :options="{ group: 'pages', animation: 100, handle: '.drag-handle' }"
-                        @change="handelPagesSorting"
-                    >
-                        <transition-group name="list" tag="div">
-                            <card
-                                v-for="page in pages"
-                                :key="page.id"
-                                :card-title="page.title"
-                                :single="page"
-                                cardType="page"
-                                v-bind:class="[selectedCardId == page.id ? selectedCardClass : '']"
-                                @click.right.native="handleSelectCard(page)"
-                                @contextmenu.prevent.native="$refs.pageMenu.open"
-                            />
-                        </transition-group>
-                    </draggable>
+        <div class="app-relative" id="app-pages-cards">
+            <div class="app-fixed">
+                <div v-bar>
+                    <div class="app-cards" :class="[addFormVisiblity ? lessHeightClass : '', editFormVisiblity ? lessHeightClass : '']">
+                        <error v-if="error"></error>
+                        <div v-else-if="loading" class="loader-bg h100"></div>
+                        <div class="app-cards-container" id="app-pages-container" v-else-if="pages.length > 0">
+                            <draggable
+                                v-model="pages"
+                                :options="{ group: 'pages', animation: 100, handle: '.drag-handle' }"
+                                @change="handelPagesSorting"
+                            >
+                                <transition-group name="list" tag="div">
+                                    <card
+                                        v-for="page in pages"
+                                        :key="page.id"
+                                        :card-title="page.title"
+                                        :single="page"
+                                        cardType="page"
+                                        v-bind:class="[selectedCardId == page.id ? selectedCardClass : '']"
+                                        @click.right.native="handleSelectCard(page)"
+                                        @contextmenu.prevent.native="$refs.pageMenu.open"
+                                    />
+                                </transition-group>
+                            </draggable>
+                        </div>
+                        <empty-pages v-else-if="hasPages == false" class="h100"></empty-pages>
+                        <empty v-else icon="pages" name="Pages" class="app-empty-pages h100"></empty>
+                    </div>
                 </div>
-                <empty-pages v-else-if="hasPages == false" class="h100"></empty-pages>
-                <empty v-else icon="pages" name="Pages" class="h100"></empty>
             </div>
         </div>
-       <context-menu id="context-menu" ref="pageMenu" class="app-context-menu">
+        <context-menu id="context-menu" ref="pageMenu" class="app-context-menu">
             <li>
                 <a href="#" class="normal" @click.prevent="handleActiveEditMode">
                     <i class="fas fa-pen-square"></i> Edit title
@@ -89,7 +93,15 @@
                 hideThisSectionClass: 'slide-hide'
             }
         },
-        components: { contextMenu, draggable },
+        mounted() {
+            let self = this;
+            this.$nextTick(function () {
+                self.setContentHeight();
+                window.onresize = function(event) {
+                    self.setContentHeight();
+                };
+            });
+        },
         computed: {
             addFormVisiblity () {
                 return this.$store.state.formVisiblity.pages.add;
@@ -127,6 +139,7 @@
                 return this.$store.getters.hasPages;
             }
         },
+        components: { contextMenu, draggable },
         methods: {
             handleAddPage() {
                 if(this.add.title.length == 0) {
@@ -235,6 +248,23 @@
                 setTimeout(() => {
                     document.getElementById('addPage').focus();
                 }, 100);
+            },
+            handelHideAddForm () {
+                this.$store.dispatch('setPagesAddFormVisibility', false);
+                this.$emit('addFocus');
+            },
+            handelHideEditForm () {
+                this.$store.dispatch('setPagesEditFormVisibility', false);
+            },
+            setContentHeight () {
+                var height = window.innerHeight ||
+                            document.documentElement.clientHeight ||
+                            document.body.clientHeight;
+                height = height - 147;
+                setTimeout(() => {
+                    document.getElementById('app-pages-cards').style.height = height + 'px';
+                    document.getElementById('app-pages-container').style.height = height + 'px';
+                }, 500);
             }
         }
     }

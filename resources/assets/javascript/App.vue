@@ -19,7 +19,7 @@
             </div>
         </header>
 
-        <main class="app-main container">
+        <main id="app-main" class="app-main container" :class="[ currentRoute == 'auth' ? bgClass : '' ]">
             <transition name="page-loader">
                 <div v-if="loading" class="app-loader">
                     <div class="loader-bg loader-bg-xl h100"></div>
@@ -31,8 +31,8 @@
         <footer class="app-footer text-center">
             <div class="container">
                 <div class="app-footer-inner">
-                    <p><small>&copy; Codolog - Developers reminder</small></p>
-                    <p><small>Made with <i class="fas fa-heart heart"></i> by <a href="https://abdalla.js.org" target="_blank">Abdalla Arbab</a> from OTSI .inc <span v-if="currentRoute == 'auth'">- Icons made by <a href="https://www.flaticon.com/" title="Flaticon" target="_blank">Flaticon</a> and licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></span></small></p>
+                    <p><small>&copy; Codolog - Notes, without a pain</small></p>
+                    <p><small>Made with <i class="fas fa-heart heart"></i> by <a href="https://abdalla.js.org" target="_blank">Abdalla Arbab</a> licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a><span v-if="currentRoute == 'auth'"> - Icons made by <a href="https://www.flaticon.com/" title="Flaticon" target="_blank">Flaticon</a></span></small></p>
                 </div>
             </div>
         </footer>
@@ -56,8 +56,20 @@
 
     export default {
         router,
+        data () {
+            return {
+                bgClass: 'gray-bg'
+            }
+        },
         mounted() {
+            let self = this;
             this.$store.dispatch('initApp');
+            this.$nextTick(function () {
+                self.setAppMainHeight();
+                window.onresize = function(event) {
+                    self.setAppMainHeight();
+                };
+            });
         },
         computed: {
             loading () {
@@ -74,6 +86,16 @@
             },
             currentRoute() {
                 return this.$route.name;
+            }
+        },
+        methods: {
+            setAppMainHeight() {
+                var height = window.innerHeight ||
+                            document.documentElement.clientHeight ||
+                            document.body.clientHeight;
+                height = height - 83;
+                document.getElementById('app-main').style.height = height + 'px';
+                console.log(height);
             }
         }
     }

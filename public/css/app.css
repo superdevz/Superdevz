@@ -3159,14 +3159,22 @@ table {
 .mar-x-auto { margin-left: auto !important; margin-right: auto !important; }
 .mar-y-auto { margin-top: auto !important; margin-bottom: auto !important; }
 .mar-xy-auto { margin: auto !important; }
+@font-face {
+  font-family: 'Varela Round';
+  src: url(http://codolog.beta/fonts/VarelaRound-Regular.eot?7bc2c53349f8d74c2c4c77211007977e);
+  src: url(http://codolog.beta/fonts/VarelaRound-Regular.eot?7bc2c53349f8d74c2c4c77211007977e) format("embedded-opentype"), url(http://codolog.beta/fonts/VarelaRound-Regular.woff2?1fd18eac5a2eb9a4a08db0df7e2c31ff) format("woff2"), url(http://codolog.beta/fonts/VarelaRound-Regular.woff?337db5191fbfe01b4cfcfddb8a3d059f) format("woff"), url(http://codolog.beta/fonts/VarelaRound-Regular.ttf?9e767c000edfafed657f3bf9e138b87e) format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
 :root {
   /*************************************************************************************************
     * Core variables
     *************************************************************************************************/
   /* Fonts */
-  --font-sans-serif: 'Nanum Gothic', sans-serif;
-  --font-serif: 'Nanum Gothic', serif;
-  --font-system: 'Nanum Gothic', system-ui;
+  --font-sans-serif: 'Varela Round', sans-serif;
+  --font-serif: 'Varela Round', serif;
+  --font-system: 'Varela Round', system-ui;
   --font-monospace: Menlo, Consolas, "DejaVu Sans Mono", monospace;
   /* Colors (most courtesy of http://clrs.cc/) */
   --color-white: white;
@@ -3198,7 +3206,7 @@ table {
   /* Components */
   --component-bg-color: #f2f2f2;
   --component-border-color: #ddd;
-  --component-border-radius: .25rem;
+  --component-border-radius: .1em;
   --component-border-width: 1px;
   --component-focus-width: 2px;
   --component-padding-x: 1rem;
@@ -3346,7 +3354,7 @@ table {
   --headings-font-family: var(--font-system);
   --headings-font-weight: var(--font-weight-light);
   --headings-line-height: 1.1;
-  --headings-margin-bottom: 1.2rem;
+  --headings-margin-bottom: 1rem;
   --headings-color: inherit;
   --headings-font-size-h1: 2.5rem;
   --headings-font-size-h2: 2rem;
@@ -3652,6 +3660,18 @@ body {
   height: 100%;
 }
 
+p {
+  margin-bottom: 0.5rem;
+}
+
+pre {
+  margin-bottom: 1rem;
+}
+
+.gray-bg {
+  background: #f7f7f7;
+}
+
 .h100 {
   height: 100%;
 }
@@ -3678,6 +3698,7 @@ body {
   transition: all .1s;
   background-color: #ecf6ff;
   color: #0073d9;
+  border: 1px solid #0073d9;
 }
 
 .button:focus {
@@ -3701,6 +3722,7 @@ body {
 .danger {
   background-color: #ffedec;
   color: #ff4136;
+  border: 1px solid #ff4136;
 }
 
 .danger:focus {
@@ -3968,8 +3990,7 @@ button.button-lg {
   -webkit-box-pack: center;
       -ms-flex-pack: center;
           justify-content: center;
-  border: 1px dashed #0073d9;
-  background: #ecf6ff;
+  border-radius: 0.2em;
 }
 
 .app-empty .empty-inner {
@@ -3981,16 +4002,34 @@ button.button-lg {
   line-height: 2;
   width: 100px;
   margin: auto;
-  margin-bottom: 25px;
+  margin-bottom: 8px;
 }
 
 .app-empty .empty-inner .empty-text {
-  font-size: 15px;
+  color: #fff;
+  font-size: 17px;
   text-transform: uppercase;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.7);
 }
 
 .app-empty .empty-inner p {
   margin: 0;
+}
+
+.app-empty.app-empty-page {
+  background-image: linear-gradient(135deg, #72EDF2 10%, #5151E5 100%);
+}
+
+.app-empty.app-empty-pages {
+  background-image: linear-gradient(135deg, #F761A1 10%, #8C1BAB 100%);
+}
+
+.app-empty.app-empty-categories {
+  background-image: linear-gradient(135deg, #FEB692 10%, #EA5455 100%);
+}
+
+.app-empty.app-no-pages {
+  background-image: linear-gradient(135deg, #FF9D6C 10%, #BB4E75 100%);
 }
 
 .page-loader-enter-active,
@@ -4292,6 +4331,9 @@ button.button-lg {
 }
 
 .v-popover .trigger {
+  display: -webkit-box !important;
+  display: -ms-flexbox !important;
+  display: flex !important;
   outline: none;
 }
 
@@ -4437,27 +4479,38 @@ button.button-lg {
           align-items: flex-start;
 }
 
+.app-main .app-container .app-relative {
+  position: relative;
+}
+
+.app-main .app-container .app-fixed {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  z-index: 99999;
+}
+
 .app-main .app-container .app-page-form {
   border-right: 1px solid #eee;
   height: 609px !important;
   pointer-events: none;
-  -webkit-box-flex: 0;
-      -ms-flex: 0;
-          flex: 0;
+  -ms-flex-preferred-size: 0;
+      flex-basis: 0;
   width: 0;
   opacity: 0;
   padding-left: 0;
   padding-right: 0;
-  -webkit-transition: width 300ms, opacity 300ms, padding-left 300ms, padding-right 300ms, -webkit-box-flex 300ms;
-  transition: width 300ms, opacity 300ms, padding-left 300ms, padding-right 300ms, -webkit-box-flex 300ms;
-  transition: flex 300ms, width 300ms, opacity 300ms, padding-left 300ms, padding-right 300ms;
-  transition: flex 300ms, width 300ms, opacity 300ms, padding-left 300ms, padding-right 300ms, -webkit-box-flex 300ms, -ms-flex 300ms;
+  -webkit-transition: width 300ms, opacity 300ms, padding-left 300ms, padding-right 300ms, -webkit-flex-basis 300ms;
+  transition: width 300ms, opacity 300ms, padding-left 300ms, padding-right 300ms, -webkit-flex-basis 300ms;
+  transition: flex-basis 300ms, width 300ms, opacity 300ms, padding-left 300ms, padding-right 300ms;
+  transition: flex-basis 300ms, width 300ms, opacity 300ms, padding-left 300ms, padding-right 300ms, -webkit-flex-basis 300ms, -ms-flex-preferred-size 300ms;
 }
 
 .app-main .app-container .app-page-form.slide-show {
-  -webkit-box-flex: 2;
-      -ms-flex: 2;
-          flex: 2;
+  -ms-flex-preferred-size: 50%;
+      flex-basis: 50%;
   padding: 1rem;
   opacity: 1;
   pointer-events: auto;
@@ -4474,22 +4527,20 @@ button.button-lg {
 }
 
 .app-main .app-container .app-categories {
-  -webkit-box-flex: 1;
-      -ms-flex: 1;
-          flex: 1;
+  -ms-flex-preferred-size: 25%;
+      flex-basis: 25%;
   padding: 1rem;
   border-left: 1px solid #eee;
-  -webkit-transition: width 300ms, opacity 300ms, padding-left 300ms, padding-right 300ms, -webkit-box-flex 300ms;
-  transition: width 300ms, opacity 300ms, padding-left 300ms, padding-right 300ms, -webkit-box-flex 300ms;
-  transition: flex 300ms, width 300ms, opacity 300ms, padding-left 300ms, padding-right 300ms;
-  transition: flex 300ms, width 300ms, opacity 300ms, padding-left 300ms, padding-right 300ms, -webkit-box-flex 300ms, -ms-flex 300ms;
+  -webkit-transition: width 300ms, opacity 300ms, padding-left 300ms, padding-right 300ms, -webkit-flex-basis 300ms;
+  transition: width 300ms, opacity 300ms, padding-left 300ms, padding-right 300ms, -webkit-flex-basis 300ms;
+  transition: flex-basis 300ms, width 300ms, opacity 300ms, padding-left 300ms, padding-right 300ms;
+  transition: flex-basis 300ms, width 300ms, opacity 300ms, padding-left 300ms, padding-right 300ms, -webkit-flex-basis 300ms, -ms-flex-preferred-size 300ms;
 }
 
 .app-main .app-container .app-categories.slide-hide {
   pointer-events: none;
-  -webkit-box-flex: 0;
-      -ms-flex: 0;
-          flex: 0;
+  -ms-flex-preferred-size: 0;
+      flex-basis: 0;
   width: 0;
   opacity: 0;
   padding-left: 0;
@@ -4497,15 +4548,14 @@ button.button-lg {
 }
 
 .app-main .app-container .app-pages {
-  -webkit-box-flex: 1;
-      -ms-flex: 1;
-          flex: 1;
+  -ms-flex-preferred-size: 25%;
+      flex-basis: 25%;
   padding: 1rem;
   border-left: 1px solid #eee;
-  -webkit-transition: width 300ms, opacity 300ms, padding-left 300ms, padding-right 300ms, -webkit-box-flex 300ms;
-  transition: width 300ms, opacity 300ms, padding-left 300ms, padding-right 300ms, -webkit-box-flex 300ms;
-  transition: flex 300ms, width 300ms, opacity 300ms, padding-left 300ms, padding-right 300ms;
-  transition: flex 300ms, width 300ms, opacity 300ms, padding-left 300ms, padding-right 300ms, -webkit-box-flex 300ms, -ms-flex 300ms;
+  -webkit-transition: width 300ms, opacity 300ms, padding-left 300ms, padding-right 300ms, -webkit-flex-basis 300ms;
+  transition: width 300ms, opacity 300ms, padding-left 300ms, padding-right 300ms, -webkit-flex-basis 300ms;
+  transition: flex-basis 300ms, width 300ms, opacity 300ms, padding-left 300ms, padding-right 300ms;
+  transition: flex-basis 300ms, width 300ms, opacity 300ms, padding-left 300ms, padding-right 300ms, -webkit-flex-basis 300ms, -ms-flex-preferred-size 300ms;
 }
 
 .app-main .app-container .app-pages.slide-hide {
@@ -4520,9 +4570,8 @@ button.button-lg {
 }
 
 .app-main .app-container .app-page {
-  -webkit-box-flex: 2;
-      -ms-flex: 2;
-          flex: 2;
+  -ms-flex-preferred-size: 50%;
+      flex-basis: 50%;
   padding: 1rem;
 }
 
@@ -4541,8 +4590,57 @@ button.button-lg {
 }
 
 .app-main .app-container .app-page .app-page-container .app-page-head h1 {
-  font-size: 30px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  font-size: 24px;
   margin-bottom: 10px;
+}
+
+.app-main .app-container .app-page .app-page-container .app-page-head h1 .app-inner-title {
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 500px;
+}
+
+.app-main .app-container .app-page .app-page-container .app-page-head h1 .app-inner-title.smaller-title {
+  max-width: 410px;
+}
+
+.app-main .app-container .app-page .app-page-container .app-page-head h1 .app-inner-title:focus,
+.app-main .app-container .app-page .app-page-container .app-page-head h1 .app-inner-title:hover {
+  color: transparent;
+}
+
+.app-main .app-container .app-page .app-page-container .app-page-head h1 .app-inner-title:focus:after,
+.app-main .app-container .app-page .app-page-container .app-page-head h1 .app-inner-title:hover:after {
+  content: attr(data-text);
+  overflow: visible;
+  text-overflow: inherit;
+  background: #fff;
+  position: absolute;
+  left: auto;
+  top: auto;
+  z-index: 99999999;
+  width: auto;
+  padding: 10px;
+  max-width: 33rem;
+  white-space: normal;
+  word-wrap: break-word;
+  display: block;
+  color: black;
+  margin-top: -2.2rem;
+  margin-left: -0.67rem;
+  -webkit-box-shadow: 0 1px 3px 0px rgba(0, 0, 0, 0.25);
+          box-shadow: 0 1px 3px 0px rgba(0, 0, 0, 0.25);
 }
 
 .app-main .app-container .app-page .app-page-container .app-page-head h1 .app-page-circle {
@@ -4588,8 +4686,9 @@ button.button-lg {
 }
 
 .app-main .app-container .app-page .app-page-container .app-page-contents .app-page-contents-inner {
-  height: 575px !important;
+  height: 100%;
   margin-right: 14px;
+  font-family: 'Quando';
 }
 
 .app-main .app-container .app-section-head {
@@ -4602,8 +4701,12 @@ button.button-lg {
   margin-bottom: 10px;
 }
 
+.app-main .app-container .app-section-head .v-popover {
+  margin-left: auto;
+}
+
 .app-main .app-container .app-section-head .app-heading {
-  font-size: 10px;
+  font-size: 15px;
   margin: 0 5px 0 0;
   text-transform: uppercase;
 }
@@ -4615,7 +4718,11 @@ button.button-lg {
   line-height: 0;
 }
 
-.app-main .app-container .app-section-head .app-info-button .fa-info {
+.app-main .app-container .app-section-head .app-info-button.app-info-category .fa-info {
+  font-size: 12px;
+}
+
+.app-main .app-container .app-section-head .app-info-button.app-info-page .fa-info {
   font-size: 12px;
 }
 
@@ -4628,7 +4735,6 @@ button.button-lg {
 
 .app-main .app-container .app-section-head .app-add-button {
   padding: 2px 0;
-  margin: 0 5px 0 0;
   height: auto;
   line-height: 0;
 }
@@ -4651,7 +4757,6 @@ button.button-lg {
 
 .app-main .app-container .category-form .page-input,
 .app-main .app-container .page-form .page-input {
-  border-radius: 0.2em;
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
 }
@@ -4673,7 +4778,6 @@ button.button-lg {
 }
 
 .app-main .app-container .app-cards {
-  height: 605px !important;
   overflow-x: auto;
   -webkit-transition: height .3s;
   transition: height .3s;
@@ -4706,7 +4810,7 @@ button.button-lg {
   -webkit-transition: all .1s;
   transition: all .1s;
   cursor: pointer;
-  height: 40px;
+  min-height: 40px;
 }
 
 .app-main .app-container .app-cards .app-cards-container .app-card.selected {
@@ -4742,8 +4846,11 @@ button.button-lg {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: flex-start;
   width: 100%;
-  height: 100%;
+  min-height: 40px;
 }
 
 .app-main .app-container .app-cards .app-cards-container .app-card .app-card-wrapper > h3 {
@@ -4752,8 +4859,7 @@ button.button-lg {
   -webkit-box-flex: 1;
       -ms-flex-positive: 1;
           flex-grow: 1;
-  padding: 11px;
-  height: 100%;
+  padding: 12px;
 }
 
 .app-main .app-container .app-cards .app-cards-container .app-card .app-card-wrapper > h3:hover,
@@ -4763,7 +4869,7 @@ button.button-lg {
 }
 
 .app-main .app-container .app-cards .app-cards-container .app-card .app-card-wrapper .app-card-circle-warpper {
-  height: 100%;
+  min-height: 40px;
 }
 
 .app-main .app-container .app-cards .app-cards-container .app-card .app-card-wrapper .app-card-circle-warpper .app-card-circle {
@@ -4843,9 +4949,9 @@ button.button-lg {
   margin: auto;
   padding: 20px;
   max-width: 1100px;
-  background: rgba(255, 255, 255, 0.7);
-  -webkit-box-shadow: inset 0 0px 1px rgba(0, 0, 0, 0.9);
-          box-shadow: inset 0 0px 1px rgba(0, 0, 0, 0.9);
+  background: #fff;
+  -webkit-box-shadow: 0 16px 32px #0000001f, 0 -2px 0px #2c9dff;
+          box-shadow: 0 16px 32px #0000001f, 0 -2px 0px #2c9dff;
 }
 
 .app-main .app-auth .app-auth-container .app-auth-intro {
@@ -4869,12 +4975,12 @@ button.button-lg {
 }
 
 .app-main .app-auth .app-auth-container .app-auth-intro .intro-boxes .intro-box {
-  padding: 10px;
+  -ms-flex-preferred-size: 33.333%;
+      flex-basis: 33.333%;
+  padding: 20px 10px 25px 10px;
   margin: 5px;
   background: #fff;
-  -webkit-box-shadow: inset 0 0px 1px rgba(0, 0, 0, 0.25);
-          box-shadow: inset 0 0px 1px rgba(0, 0, 0, 0.25);
-  max-width: 218px;
+  border: 1px solid #eeeeee;
 }
 
 .app-main .app-auth .app-auth-container .app-auth-intro .intro-boxes .intro-box .intro-icon {
@@ -4891,9 +4997,13 @@ button.button-lg {
   text-align: center;
 }
 
+.app-main .app-auth .app-auth-container .app-auth-intro .intro-boxes.intro-bottom .intro-box {
+  padding: 20px 10px 30px 10px;
+}
+
 .app-main .app-auth .app-auth-container .app-auth-form {
   width: 35%;
-  padding-left: 20px;
+  padding: 15px 6px 15px 25px;
 }
 
 .app-main .app-auth .app-auth-container .app-auth-form h2 {
@@ -4926,7 +5036,8 @@ button.button-lg {
   border-radius: 0.2em;
   -webkit-box-shadow: 0 2px 5px #a4d4ff;
           box-shadow: 0 2px 5px #a4d4ff;
-  max-width: 25%;
+  -ms-flex-preferred-size: 25%;
+      flex-basis: 25%;
 }
 
 .app-main .app-profile .app-profile-data h1 {
@@ -4935,14 +5046,7 @@ button.button-lg {
 }
 
 .app-main .app-profile .app-profile-data .avatar-wrapper {
-  width: 321px;
-  height: 321px;
   margin-bottom: 15px;
-}
-
-.app-main .app-profile .app-profile-data .avatar-wrapper img {
-  width: 321px;
-  height: 321px;
 }
 
 .app-main .app-profile .app-profile-data p {
@@ -4960,7 +5064,8 @@ button.button-lg {
   padding: 15px;
   margin-top: 30px;
   border-radius: 0.2em;
-  width: 75%;
+  -ms-flex-preferred-size: 75%;
+      flex-basis: 75%;
 }
 
 .app-main .app-profile .app-edit-forms > div {
@@ -5313,8 +5418,8 @@ fieldset[disabled] .vue-swatches {
 
 .app-footer {
   -webkit-box-flex: 0;
-      -ms-flex: 0 1 35px;
-          flex: 0 1 35px;
+      -ms-flex: 0 1 25px;
+          flex: 0 1 25px;
 }
 
 .app-footer .app-footer-inner {
@@ -5331,6 +5436,7 @@ fieldset[disabled] .vue-swatches {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
+  padding: 3px 0;
 }
 
 .app-footer p {

@@ -3,7 +3,7 @@
         <div class="app-profile-data">
             <h1>Your profile</h1>
             <div class="avatar-wrapper">
-                <img :src="avatar" width="321" height="321" alt="Abdalla Arbab">
+                <img :src="avatar" alt="Abdalla Arbab">
             </div>
             <p><b>Name:</b> <span v-text="name"></span></p>
             <p><b>Email:</b> <span v-text="email"></span></p>
@@ -12,7 +12,7 @@
         <div class="app-edit-forms">
             <div>
                 <h2>Edit profile</h2>
-                <form @submit.prevent="handleEditProfile" @keydown="errors.editprofile.clear($event.target.dataset.name)">
+                <form autocomplete="off" @submit.prevent="handleEditProfile" @keydown="errors.editprofile.clear($event.target.dataset.name)">
                     <div class="input-field">
                         <label for="modify-name">Name</label>
                         <input type="text" id="modify-name" class="input" v-model="editprofile.name" data-name="name">
