@@ -1,8 +1,8 @@
 function defaultState () {
     return {
         pageLoading: true,
+        pageHeight: window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight,
         auth: false,
-        apiToken: false,
         sort: {
             categories: 'desc',
             pages: 'desc',
@@ -26,6 +26,7 @@ function defaultState () {
             page: false
         },
         pageFormVisibility: false,
+        helpGlowVisibility: false,
         pageFormTextarea: '',
         formVisiblity: {
             categories: {
@@ -55,7 +56,7 @@ function defaultState () {
             },
         },
         categories: [],
-        pages: [],
+        pages: []
     }
 }
 

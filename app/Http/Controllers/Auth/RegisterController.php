@@ -86,12 +86,12 @@ class RegisterController extends Controller
 
         $this->guard()->login($user);
 
-        $user->api_token = str_random(60);
         $user->save();
 
         return response()->json([
             'auth' => true,
             'later' => [
+                'csrfToken' => csrf_token(),
                 'flash' => 'Your account has been created. Welcome to Codolog.',
                 'timeout' => 10000
             ]

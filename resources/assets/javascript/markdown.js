@@ -15,9 +15,11 @@ const markdown = new Remarkable('full', {
     html: true,
     breaks: true,
     linkify: true,
-    linkTarget:   '_blank',
+    linkTarget: '_blank',
     langPrefix: '',
     langDefault: 'unknown',
+    gfm: true,
+    breaks: true,
     highlight: function (str, lang) {
         if (lang && hljs.getLanguage(lang)) {
             try {

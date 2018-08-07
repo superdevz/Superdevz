@@ -15,7 +15,6 @@ class User extends JsonResource
     public function toArray($request)
     {
         return [
-            'apiToken' => $this->api_token,
             'name' => $this->name,
             'email' => $this->email,
             'avatarSm' => 'https://www.gravatar.com/avatar/' . md5($this->email) . '?d=identicon&s=60',

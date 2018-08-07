@@ -4,9 +4,10 @@
     *************************************************************************************************/
   
     /* Fonts */
-    --font-sans-serif: 'Varela Round', sans-serif;
-    --font-serif: 'Varela Round', serif;
-    --font-system: 'Varela Round', system-ui;
+    --font-sans-serif: 'Source Sans Pro', sans-serif;
+    --font-serif: 'Source Sans Pro', sans-serif;
+    --font-system: 'Source Sans Pro', system-ui;
+    --font-editor: 'Alegreya Sans', serif; 
     --font-monospace: Menlo, Consolas, "DejaVu Sans Mono", monospace;
   
     /* Colors (most courtesy of http://clrs.cc/) */
@@ -204,9 +205,9 @@
     --body-color-muted: var(--color-gray);
   
     --font-family: var(--font-system);
-    --font-size: 1rem; /* Most browsers use a default font size of 16px */
+    --font-size: 1.1rem; /* Most browsers use a default font size of 16px */
     --font-size-small: 80%;
-    --font-weight-light: 300;
+    --font-weight-light: bold;
     --font-weight: 400;
     --font-weight-bold: 700;
     --line-height: 1.5;

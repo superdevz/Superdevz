@@ -19,13 +19,13 @@
                 </form>
             </div>
         </transition>
-        <div class="app-relative" id="app-pages-cards">
+        <div class="app-relative" :style="blockHeight">
             <div class="app-fixed">
-                <div v-bar>
-                    <div class="app-cards" :class="[addFormVisiblity ? lessHeightClass : '', editFormVisiblity ? lessHeightClass : '']">
+                <div class="h100" v-bar>
+                    <div class="app-cards">
                         <error v-if="error"></error>
                         <div v-else-if="loading" class="loader-bg h100"></div>
-                        <div class="app-cards-container" id="app-pages-container" v-else-if="pages.length > 0">
+                        <div class="app-cards-container" :style="listHeight" v-else-if="pages.length > 0">
                             <draggable
                                 v-model="pages"
                                 :options="{ group: 'pages', animation: 100, handle: '.drag-handle' }"
@@ -88,19 +88,18 @@
                     buttonLoading: false
                 },
                 loadingClass: 'button-loader',
-                lessHeightClass: 'less-height',
                 selectedCardClass: 'selected',
-                hideThisSectionClass: 'slide-hide'
+                hideThisSectionClass: 'slide-hide',
+                blockHeight: {
+                    height: ''
+                },
+                listHeight: {
+                    height: ''
+                }
             }
         },
         mounted() {
-            let self = this;
-            this.$nextTick(function () {
-                self.setContentHeight();
-                window.onresize = function(event) {
-                    self.setContentHeight();
-                };
-            });
+            this.setContentHeight(this.pageHeight);
         },
         computed: {
             addFormVisiblity () {
@@ -137,6 +136,20 @@
             },
             hasPages() {
                 return this.$store.getters.hasPages;
+            },
+            pageHeight () {
+                return this.$store.state.pageHeight;
+            }
+        },
+        watch: {
+            pageHeight(val) {
+                this.setContentHeight(val);
+            },
+            addFormVisiblity() {
+                this.setContentHeight(this.pageHeight);
+            },
+            editFormVisiblity() {
+                this.setContentHeight(this.pageHeight);
             }
         },
         components: { contextMenu, draggable },
@@ -256,15 +269,17 @@
             handelHideEditForm () {
                 this.$store.dispatch('setPagesEditFormVisibility', false);
             },
-            setContentHeight () {
-                var height = window.innerHeight ||
-                            document.documentElement.clientHeight ||
-                            document.body.clientHeight;
-                height = height - 147;
-                setTimeout(() => {
-                    document.getElementById('app-pages-cards').style.height = height + 'px';
-                    document.getElementById('app-pages-container').style.height = height + 'px';
-                }, 500);
+            setContentHeight (pageHeight) {
+                let less1 = 149;
+                let less2 = 152;
+                let height1 = pageHeight - less1;
+                let height2 = pageHeight - less2;
+                if(this.addFormVisiblity == true || this.editFormVisiblity == true) {
+                    height1 = height1 - 50;
+                    height2 = height2 - 50;
+                }
+                this.blockHeight.height = height1 + 'px';
+                this.listHeight.height = height2 + 'px';
             }
         }
     }

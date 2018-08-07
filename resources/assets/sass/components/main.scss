@@ -1,3 +1,6 @@
+.app {
+    display: relative;
+}
 .app-main {
     flex: 1 1 auto;
     height: 100%;
@@ -21,6 +24,7 @@
         align-items: flex-start;
         .app-relative {
             position: relative;
+            transition: height .3s;
         }
         .app-fixed {
             position: absolute;
@@ -28,11 +32,11 @@
             left: 0;
             bottom: 0;
             right: 0;
-            z-index: 99999;
+            z-index: 10;
         }
         .app-page-form {
+            position: relative;
             border-right: 1px solid #eee;
-            height: 609px !important;
             pointer-events: none;
             flex-basis: 0;
             width: 0;
@@ -46,13 +50,99 @@
                 opacity: 1;
                 pointer-events: auto;
             }
+            .help-text {
+                font-size: 13.5px;
+                text-align: center;
+                padding-bottom: 7px;
+                margin-bottom: 0;
+                border-bottom: 1px solid #eee;            
+            }
+            .app-markdown-fixed {
+                position: fixed;
+                bottom: 35px;
+                left: 5px;
+                z-index: 999999;
+                .app-markdown-help {
+                    padding: 5px;
+                    background: #000;
+                    color: #fff;
+                    height: 30px;
+                    width: 30px;
+                    border-radius: 50%;
+                    line-height: 1.3;
+                    font-size: 1rem;
+                    cursor: pointer;
+                    &.glow {
+                        animation: black-glowing 5000ms infinite;
+                    }
+                }
+            }
+            .app-markdown-examples {
+                font-family: var(--font-editor);
+                font-size: 18px;
+                position: absolute;
+                top: 0px;
+                left: 0px;
+                right: 0px;
+                bottom: 40px;
+                z-index: 99999999;
+                margin: 8px;
+                background: #f7f7f7;
+                padding: 10px;
+                box-shadow: 0 13px 35px -7px rgba(0, 0, 0, 0.55);
+                border-radius: 0.2em;
+                h1, h2, h3, h4, h5, h6 {
+                    font-family: var(--font-editor);
+                    font-weight: bold;
+                }
+                .app-markdown-examples-inner {
+                    height: 100%;
+                    width: 100%;
+                    table.markdown-reference {
+                        background: transparent;
+                        margin-bottom: 0;
+                        thead {
+                            text-align: left;
+                            box-shadow: 0 4px 12px -9px black;
+                            th {
+                                padding: 10px;
+                                background: #fff;
+                            }
+                            th:first-child{
+                                border-radius:0.2em 0 0 0.2em;
+                            }
+                            th:last-child{
+                                border-radius:0 0.2em 0.2em 0;
+                            }
+                        }
+                        tbody {
+                            td {
+                                padding: 10px;
+                            }
+                        }
+                        tr {
+                            border-bottom: 1px solid #e4e4e4;
+                            &:last-child{
+                                border-bottom: none;
+                            }
+                        }
+                        pre {
+                            font-size: 12px;
+                        }
+                    }
+                }
+            }
             .page-textarea {
-                margin-top: 59px;
-                height: 575px !important;
-                max-height: 575px;
+                padding-top: 36px;
+                height: 100%;
                 resize: none;
                 border: none;
                 box-shadow: none;
+                font-family: var(--font-editor);
+                font-size: 18px;
+                &::placeholder {
+                    color: #000;
+                }
             }
         }
         .app-categories {
@@ -92,7 +182,7 @@
                     align-items: center;
                     justify-content: space-between;
                     border-bottom: 1px solid #eee;
-                    margin-bottom: 15px;
+                    margin-bottom: 16px;
                     h1 {
                         display: flex;
                         align-items: center;
@@ -164,16 +254,18 @@
                     }
                 }
                 .app-page-contents {
-                    height: 639px !important;
                     .app-page-contents-inner {
                         height: 100%;
                         margin-right: 14px;
-                        // p {
-                            font-family: 'Quando';
-                        // }
-                        // h1, h2, h3, h4, h5, h6 {
-                        //     font-family: 'Varela Round';                            
-                        // }
+                        font-family: var(--font-editor);
+                        font-size: 18px;
+                        h1, h2, h3, h4, h5, h6 {
+                            font-family: var(--font-editor);
+                            font-weight: bold;
+                        }
+                        ul, ol {
+                            padding-left: 27px;
+                        }
                     }
                 }
             }
@@ -248,17 +340,14 @@
         }
         .app-cards {
             overflow-x: auto;
-            transition: height .3s;
-            &.less-height {
-                height: 558px !important;
-            }
             .app-cards-container {
-                border: 1px solid #eee;
+                transition: height .3s;
                 .app-card {
                     display: flex;
                     flex-direction: row;
                     align-items: center;
-                    border-bottom: 1px solid #eee;
+                    border: 1px solid #eee;
+                    border-bottom: none;
                     user-select: none;
                     transition: all .1s;
                     cursor: pointer;
@@ -268,7 +357,7 @@
                         color: #fff;
                     }
                     &:last-child {
-                        border-bottom: none;
+                        border-bottom: 1px solid #eee;
                     }
                     & > div {
         
@@ -298,9 +387,13 @@
                             margin: 0;
                             flex-grow: 1;
                             padding: 12px;
+                            font-weight: 100;
                             &:hover, &:active {
                                 background: #0072d9;
                                 color: #fff;
+                            }
+                            &:focus {
+                                outline: 1px solid #0071d9;
                             }
                         }
                         .app-card-circle-warpper {
@@ -315,6 +408,15 @@
                                 &:hover, &:active {
                                     background: #0072d9;
                                     color: #fff;
+                                }
+                            }
+                        }
+                    }
+                    &.selected {
+                        .app-card-wrapper {
+                            & > h3 {
+                                &:focus {
+                                    outline: none;
                                 }
                             }
                         }
@@ -485,5 +587,13 @@
                 margin-left: 102px;
             }
         }
+    }
+}
+@keyframes black-glowing {
+    0%, 30% {
+        box-shadow:0 0 0 0 rgba(0, 0, 0, 0.13);
+    }
+    to {
+        box-shadow:0 0 0 50px rgba(0, 0, 0, 0);
     }
 }

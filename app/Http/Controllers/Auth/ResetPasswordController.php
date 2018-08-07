@@ -63,6 +63,7 @@ class ResetPasswordController extends Controller
         return response()->json([
             'auth' => true,
             'later' => [
+                'csrfToken' => csrf_token(),
                 'flash' => trans($response),
                 'timeout' => 10000
             ]

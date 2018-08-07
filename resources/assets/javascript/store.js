@@ -10,9 +10,6 @@ Vue.use(Vuex);
 const store = new Vuex.Store({
     state: defaultState,
     getters: {
-        apiToken(state) {
-            return 'Bearer ' + state.apiToken;
-        },
         sortedCategories(state) {
             return state.categories;
         },
@@ -48,9 +45,6 @@ const store = new Vuex.Store({
         setAuth (state, auth) {
             state.auth = auth;
         },
-        setApiToken (state, token) {
-            state.apiToken = token;
-        },
         setCategoriesSort(state, sort) {
             state.sort.categories = sort;
             state.categories = state.categories.reverse();
@@ -68,7 +62,6 @@ const store = new Vuex.Store({
             state.alerts.splice(i, 1);
         },
         setProfile (state, profile) {
-            state.apiToken = profile.apiToken;
             state.profile.name = profile.name;
             state.profile.email = profile.email;
             state.profile.avatarSm = profile.avatarSm;
@@ -206,6 +199,9 @@ const store = new Vuex.Store({
             Object.keys(s).forEach(key => {
                 state[key] = s[key]
             });
+        },
+        setPageHeight (state, height) {
+            state.pageHeight = height;
         }
     },
     actions: {
@@ -215,15 +211,11 @@ const store = new Vuex.Store({
         setAuth({commit}, auth) {
             commit('setAuth', auth);
         },
-        setApiToken({commit}, token) {
-            commit('setApiToken', token);
-        },
         setCategoriesSort({commit}, sort) {
             commit('setCategoriesSort', sort);
         },
         setProfile (context, profile) {
             context.commit('setProfile', profile);
-            axios.defaults.headers.common['Authorization'] = context.getters.apiToken;
         },
         fetchProfile (context) {
             axios.get(route('profile.sync'))
@@ -232,6 +224,7 @@ const store = new Vuex.Store({
             });
         },
         setupProfile (context, later) {
+            axios.defaults.headers.common['X-CSRF-TOKEN'] = later.csrfToken;
             return new Promise((resolve, reject) => {
                 axios.get(route('profile.sync'))
                 .then(data => {
@@ -274,12 +267,12 @@ const store = new Vuex.Store({
         },
         flushCore ({commit}) {
             commit('fluchState');
-            this.$ls.set('ApiToken', false);
         },
         signout (context) {
             context.commit('pageLoading', true);
             axios.post(route('signout'))
             .then(data => {
+                axios.defaults.headers.common['X-CSRF-TOKEN'] = data.data.csrfToken;
                 context.dispatch('flushCore');
                 context.commit('pageLoading', false);
             })
@@ -326,7 +319,12 @@ const store = new Vuex.Store({
             ]).then(() => {
                 if (router.currentRoute.name == 'home') {
                     let params = router.currentRoute.params;
-                    if(params.page != undefined && params.category != undefined) {
+                    if(params.page != undefined && params.category != undefined && params.edit == 'edit') {
+                        context.dispatch('setSelectedCategory', context.getters.getCategory(parseInt(params.category)));
+                        context.dispatch('setSelectedPage', context.getters.getPage(parseInt(params.page)));
+                        context.dispatch('setPageFormTextarea', context.getters.getPage(parseInt(params.page)).markdown);
+                        context.dispatch('setPageFormVisibility', true);
+                    } else if(params.page != undefined && params.category != undefined) {
                         context.dispatch('setSelectedCategory', context.getters.getCategory(parseInt(params.category)));
                         context.dispatch('setSelectedPage', context.getters.getPage(parseInt(params.page)));
                     } else if(params.category != undefined) {
@@ -432,23 +430,6 @@ const store = new Vuex.Store({
         setSelectedPage ({commit}, page) {
             commit('setSelectedPage', page);
         },
-        // setSelectedCard (context, payload) {
-        //     if(payload.cardType == 'category') {
-        //         context.commit('setSelectedCategory', payload.single);
-        //         if (context.state.selectedCard.pages.data.category_id != payload.single.id) {
-        //             context.commit('setSelectedPage', {
-        //                 id: undefined,
-        //                 category_id: undefined,
-        //                 data: {
-        //                     title: '',
-        //                     markdown: ''
-        //                 }
-        //             });
-        //         }
-        //     } else {
-        //         context.commit('setSelectedPage', payload.single);
-        //     }
-        // },
         setPageAddMode ({commit}, mode) {
             commit('setPageAddMode', mode);
         },
@@ -460,6 +441,9 @@ const store = new Vuex.Store({
         },
         setPageFormTextarea ({commit}, markdown) {
             commit('setPageFormTextarea', markdown);
+        },
+        setPageHeight ({commit}, height) {
+            commit('setPageHeight', height);
         }
     }
 });

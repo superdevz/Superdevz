@@ -3,7 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <title>Codolog | Developers reminder</title>
-    <link href="https://fonts.googleapis.com/css?family=Nanum+Gothic|Quando|Varela+Round" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js"></script>
+    <script>
+        WebFont.load({
+            google: {
+                families: ['Source Sans Pro:400,700', 'Alegreya Sans:400,700']
+            }
+        });
+    </script>
     <link rel="stylesheet" type="text/css" href="css/app.css">
     <script type="text/javascript" src="javascript/vendor.js"></script>
     <meta name="csrf-token" content="{{ csrf_token() }}">

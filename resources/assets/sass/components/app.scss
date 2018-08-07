@@ -249,7 +249,7 @@ pre {
         }
     }
     &.app-empty-page {
-        background-image: linear-gradient( 135deg, #72EDF2 10%, #5151E5 100%);
+        background-image: linear-gradient(135deg, #6aa5ff 10%, #004ec3 100%);
     }
     &.app-empty-pages {
         background-image: linear-gradient( 135deg, #F761A1 10%, #8C1BAB 100%);
@@ -289,6 +289,13 @@ pre {
 }
 .list-move {
     transition: transform 1s;
+}
+.help-slide-enter-active, .help-slide-leave-active {
+    transition: all .1s;
+}
+.help-slide-enter, .help-slide-leave-to {
+    transform: translateX(-60px);
+    opacity: 0;
 }
 .message-fade-enter-active, .message-fade-leave-active {
     transition: all .1s;

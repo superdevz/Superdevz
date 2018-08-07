@@ -22,10 +22,10 @@
                 </button>
             </div>
         </div>
-        <div class="app-relative" id="app-page-contents">
+        <div class="app-relative" :style="blockHeight">
             <div class="app-fixed">
                 <div v-bar>
-                    <div class="app-page-contents-inner syncscroll" name="syncscroll" id="page-preview" v-html="pageMarkdown"></div>
+                    <div class="app-page-contents-inner syncscroll" name="syncscroll" id="page-preview" v-html="pageMarkdown" :style="contentHeight"></div>
                 </div>
             </div>
         </div>
@@ -42,7 +42,13 @@
                 emptyText: '<p style="color: #6b6b6b"><i>Nothing here, Write something amazing ツ</i></p>',
                 saveButtonLoading: false,
                 loadingClass: 'button-loader',
-                smallTitleClass: 'smaller-title'
+                smallTitleClass: 'smaller-title',
+                blockHeight: {
+                    height: ''
+                },
+                contentHeight: {
+                    height: ''
+                }
             }
         },
         mounted () {
@@ -66,12 +72,8 @@
                 }
                 isSyncingRightScroll = false;
             }
-
-            let self = this;
-            this.setContentHeight();
-            window.onresize = function(event) {
-                self.setContentHeight();
-            };
+            
+            this.setContentHeight(this.pageHeight);
         },
         props: [ 'page' ],
         computed: {
@@ -93,6 +95,9 @@
             },
             selectedCardId () {
                 return this.$store.state.selectedCard.pages.id;
+            },
+            pageHeight () {
+                return this.$store.state.pageHeight;
             }
         },
         watch: {
@@ -104,15 +109,21 @@
                         this.addBeforeClose();
                     }
                 }
+            },
+            pageHeight(val) {
+                this.setContentHeight(val);
             }
         },
         methods: {
             handleEditPage () {
-                this.$store.dispatch('setPageFormTextarea', this.page.markdown);
-                this.$store.dispatch('setPageFormVisibility', true);
-                setTimeout(() => {
-                    document.getElementById('page-textarea').focus();
-                }, 100);
+                this.$router.push({ name: 'home', params: {
+                        category_path: 'category',
+                        category: this.page.category_id,
+                        page_path: 'page',
+                        page: this.page.id,
+                        edit: 'edit'
+                    }
+                });
             },
             handleEditDiscard () {
                 this.$store.dispatch('setPageFormVisibility', false);
@@ -120,6 +131,13 @@
                 setTimeout(() => {
                     this.$store.dispatch('setPageFormTextarea', '');
                 }, 100);
+                this.$router.push({ name: 'home', params: {
+                        category_path: 'category',
+                        category: this.page.category_id,
+                        page_path: 'page',
+                        page: this.page.id
+                    }
+                });
             },
             handleEditSave () {
                 this.saveButtonLoading = true;
@@ -140,6 +158,15 @@
                 })
                 .catch(error => {
                     self.saveButtonLoading = false;
+                })
+                .then(() => {
+                    this.$router.push({ name: 'home', params: {
+                            category_path: 'category',
+                            category: this.page.category_id,
+                            page_path: 'page',
+                            page: this.page.id
+                        }
+                    });
                 });
             },
             addBeforeClose () {
@@ -153,13 +180,11 @@
                 (e || window.event).returnValue = confirmationMessage; //Gecko + IE
                 return confirmationMessage; //Gecko + Webkit, Safari, Chrome etc.
             },
-            setContentHeight() {
-                var height = window.innerHeight ||
-                            document.documentElement.clientHeight ||
-                            document.body.clientHeight;
-                height = height - 177;
-                document.getElementById('app-page-contents').style.height = height + 'px';
-                document.getElementById('page-preview').style.height = height + 'px';
+            setContentHeight (pageHeight) {
+                let height1 = pageHeight - 117;
+                let height2 = pageHeight - 177;
+                this.blockHeight.height = height1 + 'px';
+                this.contentHeight.height = height2 + 'px';
             }
         }
     }

@@ -7,6 +7,8 @@
             <h3
                 class="app-card-heading"
                 @click="handleSelectCard()"
+                tabindex="0"
+                @keydown.enter="handleSelectCard()"
             >
                 {{ cardTitle }}
             </h3>

@@ -32,29 +32,28 @@ Vue.component('v-popover', VPopover);
 Vue.component('pages-options', require('./components/pagesOptions.vue'));
 Vue.component('empty-pages', require('./components/EmptyPages.vue'));
 Vue.component('app-page-content', require('./components/AppPageContent.vue'));
-Vue.component('app-page-form', require('./components/AppPageForm.vue'));
+Vue.component("resize-sensor", require("vue-resizesensor"));
 
 // Vue.component('passport-clients', require('./components/passport/Clients.vue'));
 // Vue.component('passport-authorized-clients', require('./components/passport/AuthorizedClients.vue'));
 // Vue.component('passport-personal-access-tokens', require('./components/passport/PersonalAccessTokens.vue'));
 
-Vue.directive('focus', function (el, binding) {
-    if (binding.value == true) {
-        el.focus()
-    }
-});
+// Vue.directive('focus', function (el, binding) {
+//     if (binding.value == true) {
+//         el.focus()
+//     }
+// });
 
 const app = new Vue({
     store,
     el: '#app',
     data() {
         return {
-
+            
         }
     },
     created () {
         this.$store.dispatch('setAuth', this.$ls.get('Auth'));
-        this.$store.dispatch('setApiToken', this.$ls.get('ApiToken'));
         this.$store.dispatch('setCategoriesSort', this.$ls.get('CategoriesSort'));
         this.$store.dispatch('setPagesSort', this.$ls.get('PagesSort'));
     },
@@ -63,9 +62,6 @@ const app = new Vue({
 
         this.$store.watch((state) => state.auth, (newValue, oldValue) => {
             this.$ls.set('Auth', newValue);
-        });
-        this.$store.watch((state) => state.apiToken, (newValue, oldValue) => {
-            this.$ls.set('ApiToken', newValue);
         });
         this.$store.watch((state) => state.sort.categories, (newValue, oldValue) => {
             this.$ls.set('CategoriesSort', newValue);

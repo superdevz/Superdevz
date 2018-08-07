@@ -64,11 +64,14 @@ class LoginController extends Controller
     {
         $request->session()->regenerate();
 
+        $request->session()->regenerateToken();
+
         $this->clearLoginAttempts($request);
 
         return response()->json([
             'auth' => true,
             'later' => [
+                'csrfToken' => csrf_token(),
                 'flash' => 'Welcome back, ' . Auth::user()->name,
                 'timeout' => 5000
             ]
@@ -87,7 +90,10 @@ class LoginController extends Controller
 
         $request->session()->invalidate();
 
+        $request->session()->regenerateToken();
+
         return response()->json([
+            'csrfToken' => csrf_token(),
             'redirect' => url('/#/auth'),
             'auth' => false
         ], 200);

@@ -25,9 +25,10 @@ const routes = [
         },
         children: [
             {
-                path: '/home/:category_path?/:category?/:page_path?/:page?',
+                path: '/home/:category_path?/:category?/:page_path?/:page?/:edit?',
                 name: 'home',
                 components: {
+                    pageform: require('./components/AppPageForm.vue'),
                     page: require('./components/AppPage.vue'),
                     pages: require('./components/AppPages.vue'),
                     categories: require('./components/AppCategories.vue')   

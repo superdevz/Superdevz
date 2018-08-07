@@ -1,5 +1,6 @@
 <template>
     <div id="app" class="app h100">
+        <resize-sensor @resized="onResize"></resize-sensor>
         <header class="app-header" id="app-header">
             <div class="container">
                 <nav class="app-navbar">
@@ -58,18 +59,13 @@
         router,
         data () {
             return {
-                bgClass: 'gray-bg'
+                bgClass: 'gray-bg',
+                width: 0,
+                height: 0
             }
         },
         mounted() {
-            let self = this;
             this.$store.dispatch('initApp');
-            this.$nextTick(function () {
-                self.setAppMainHeight();
-                window.onresize = function(event) {
-                    self.setAppMainHeight();
-                };
-            });
         },
         computed: {
             loading () {
@@ -89,14 +85,15 @@
             }
         },
         methods: {
-            setAppMainHeight() {
-                var height = window.innerHeight ||
-                            document.documentElement.clientHeight ||
-                            document.body.clientHeight;
-                height = height - 83;
-                document.getElementById('app-main').style.height = height + 'px';
-                console.log(height);
+            onResize: function() {
+                this.width = this.$el.clientWidth;
+                this.height = this.$el.clientHeight;
+                this.$store.dispatch('setPageHeight' , this.height);
             }
+        },
+        attached() {
+            this.width = this.$el.clientWidth;
+            this.height = this.$el.clientHeight;
         }
     }
 </script>
