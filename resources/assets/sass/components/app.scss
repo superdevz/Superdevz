@@ -287,8 +287,11 @@ pre {
 .list-enter, .list-leave-to {
     transform: translatex(70px);
 }
-.list-move {
+.list-move, .list-item {
     transition: transform 1s;
+}
+.list-leave-active {
+    position: absolute;
 }
 .help-slide-enter-active, .help-slide-leave-active {
     transition: all .1s;

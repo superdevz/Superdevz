@@ -84,7 +84,6 @@ class ResetPasswordController extends Controller
             'errors' => [
                 'email' => [ trans($response) ]
             ]
-            
         ], 422);
     }
 }

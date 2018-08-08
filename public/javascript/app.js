@@ -35933,6 +35933,9 @@ var app = new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
             if (response.data.redirect) {
                 window.location.replace(response.data.redirect);
             }
+            if (response.data.reload == true) {
+                window.location.reload(false);
+            }
             if (response.data.flash) {
                 flash(response.data.flash, response.data.timeout);
             }
@@ -35940,6 +35943,9 @@ var app = new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
         }, function (error) {
             if (error.response.status === 500 || error.response.status === 408 || error.code === 'ECONNABORTED') {
                 flash('Whoops, something went wrong', 3000);
+            }
+            if (error.response.status === 419) {
+                window.location.reload(false);
             }
             if (error.response.status === 401) {
                 if (self.$store.state.auth) {
@@ -45919,6 +45925,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             this.reset.buttonLoading = true;
             this.errors.reset.record({});
+            var self = this;
             __WEBPACK_IMPORTED_MODULE_0_axios___default.a.post(route('reset'), {
                 email: this.reset.email,
                 password: this.reset.password,
@@ -51879,18 +51886,7 @@ var render = function() {
                   },
                   [_vm._v("Abdalla Arbab")]
                 ),
-                _vm._v(" licensed by "),
-                _c(
-                  "a",
-                  {
-                    attrs: {
-                      href: "http://creativecommons.org/licenses/by/3.0/",
-                      title: "Creative Commons BY 3.0",
-                      target: "_blank"
-                    }
-                  },
-                  [_vm._v("CC 3.0 BY")]
-                ),
+                _vm._v(" & it's Free forever"),
                 _vm.currentRoute == "auth"
                   ? _c("span", [
                       _vm._v(" - Icons made by "),

@@ -4074,11 +4074,16 @@ button.button-lg {
           transform: translatex(70px);
 }
 
-.list-move {
+.list-move,
+.list-item {
   -webkit-transition: -webkit-transform 1s;
   transition: -webkit-transform 1s;
   transition: transform 1s;
   transition: transform 1s, -webkit-transform 1s;
+}
+
+.list-leave-active {
+  position: absolute;
 }
 
 .help-slide-enter-active,

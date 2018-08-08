@@ -260,6 +260,7 @@
             handleResetPassword: function () {
                 this.reset.buttonLoading = true;
                 this.errors.reset.record({});
+                let self = this;
                 axios.post(route('reset'), {
                     email: this.reset.email,
                     password: this.reset.password,

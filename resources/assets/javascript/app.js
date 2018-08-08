@@ -77,6 +77,9 @@ const app = new Vue({
             if(response.data.redirect) {
                 window.location.replace(response.data.redirect);
             }
+            if(response.data.reload == true) {
+                window.location.reload(false);
+            }
             if(response.data.flash) {
                 flash(response.data.flash, response.data.timeout);
             }
@@ -84,6 +87,9 @@ const app = new Vue({
         }, (error) => {
             if (error.response.status === 500 || error.response.status === 408 || error.code === 'ECONNABORTED') {
                 flash('Whoops, something went wrong', 3000);
+            }
+            if (error.response.status === 419) {
+                window.location.reload(false);
             }
             if (error.response.status === 401) {
                 if(self.$store.state.auth) {

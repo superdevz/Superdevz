@@ -19,7 +19,8 @@ class RedirectIfAuthenticated
     {
         if (Auth::guard($guard)->check()) {
             return \Response::json([
-                'redirect' => url('') . "/#/"
+                'auth' => true,
+                'reload' => true
             ]);
         }
 

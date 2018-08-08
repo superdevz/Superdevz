@@ -33,7 +33,7 @@
             <div class="container">
                 <div class="app-footer-inner">
                     <p><small>&copy; Codolog - Notes, without a pain</small></p>
-                    <p><small>Made with <i class="fas fa-heart heart"></i> by <a href="https://abdalla.js.org" target="_blank">Abdalla Arbab</a> licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a><span v-if="currentRoute == 'auth'"> - Icons made by <a href="https://www.flaticon.com/" title="Flaticon" target="_blank">Flaticon</a></span></small></p>
+                    <p><small>Made with <i class="fas fa-heart heart"></i> by <a href="https://abdalla.js.org" target="_blank">Abdalla Arbab</a> & it's Free forever<span v-if="currentRoute == 'auth'"> - Icons made by <a href="https://www.flaticon.com/" title="Flaticon" target="_blank">Flaticon</a></span></small></p>
                 </div>
             </div>
         </footer>

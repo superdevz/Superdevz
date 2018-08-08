@@ -7,7 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
-use Illuminate\Auth\Events\Registered;
+use App\Events\NewUser;
 use Illuminate\Http\Request;
 
 class RegisterController extends Controller
@@ -82,7 +82,7 @@ class RegisterController extends Controller
     {
         $this->validator($request->all())->validate();
 
-        event(new Registered($user = $this->create($request->all())));
+        event(new NewUser($user = $this->create($request->all())));
 
         $this->guard()->login($user);
 
