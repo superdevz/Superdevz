@@ -3,7 +3,7 @@
         <div class="app-auth-container">
             <div class="app-auth-intro">
                 <h1 class="text-center">Codolog</h1>
-                <p class="sub-text">Your notes, simplefied</p>
+                <p class="sub-text">Your notes, simplified</p>
                 <div class="intro-boxes">
                     <div class="intro-box">
                         <div class="intro-icon">

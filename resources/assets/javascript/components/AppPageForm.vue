@@ -171,8 +171,7 @@
                                         <td class="preformatted second-example"></td>
                                         <td>
                                             <pre># code block
-print '3 backticks or'
-print 'indent 4 spaces'</pre>
+print '3 backticks'</pre>
                                         </td>
                                     </tr>                    
                                 </tbody>

@@ -59,7 +59,6 @@ class ForgotPasswordController extends Controller
             'errors' => [
                 'email' => [ trans($response) ]
             ]
-            
         ], 422);
     }
 }
