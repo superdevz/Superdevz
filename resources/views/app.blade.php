@@ -21,5 +21,14 @@
 
     @routes
     <script type="text/javascript" src="javascript/app.js"></script>
+    <!-- Global Site Tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-67918939-2"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-67918939-2');
+    </script>
 </body>
 </html>
